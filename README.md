@@ -56,9 +56,30 @@ data/ cache/     GITIGNORED: raw audio, features, checkpoints
 
 ## Data (download on the compute machine, not in git)
 
-- ASVspoof 2019 LA: Edinburgh DataShare, doi 10.7488/ds/2555 (LA.zip, ~7.1 GB). Put it under
-  `data/LA/`. Verify protocol/folder names in `src/deepvoice/data.py` against the real files.
-- In-the-Wild: Hugging Face `mueller91/In-The-Wild`.
+Run on the machine that trains (needs `wget`, `unzip`, ~35 GB free at peak, ~16 GB after):
+
+```bash
+./scripts/download_data.sh    # resumable: rerun if the connection drops
+```
+
+| Dataset | Source | Download | Ends up at |
+|---|---|---|---|
+| ASVspoof 2019 LA | Edinburgh DataShare, doi 10.7488/ds/2555 (ODC-By; see `LICENSE.txt` inside each split folder) | `LA.zip`, 7,640,952,520 bytes | `data/LA/` (122,299 flac) |
+| In-the-Wild | Hugging Face `mueller91/In-The-Wild` (public, no login; HF tags CC-BY-SA-4.0) | `release_in_the_wild.zip`, 8,161,489,023 bytes | `data/release_in_the_wild/` (31,779 wav + `meta.csv`) |
+
+Facts checked against the real files (2026-11-05):
+- LA protocols: train 2,580 real + 22,800 fake, **20 speakers**, attacks A01-A06; dev 2,548 +
+  22,296, **20 speakers**, A01-A06; eval 7,355 + 63,882, **67 speakers**, A07-A19 (4,914 clips
+  per attack). Speakers do not overlap across splits.
+- A16 and A19 are listed in `README.LA.txt` with the same system types as A04 (TTS, waveform
+  concatenation) and A06 (VC, spectral filtering), consistent with the paper saying they
+  repeat training attacks. Treat as **repeated**; the unseen eval attacks are A07-A15, A17, A18.
+- ITW `meta.csv` has columns `file, speaker, label` (labels `bona-fide` / `spoof`; 19,963 +
+  11,816). It has **54 distinct speaker names**, not the 58 quoted in the paper.
+- Keep raw audio **on a fast local disk of the compute machine**, not on a synced or network
+  drive (reading 150k small files from Drive/NFS is very slow). If several of us share one
+  machine, keep one copy and symlink `data` to it. Share *derived* files (features,
+  embeddings, checkpoints) through a private Hugging Face repo or the team drive.
 
 ## Hypotheses hash
 
