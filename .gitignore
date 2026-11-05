@@ -1,0 +1,26 @@
+# environments / python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# data and caches: NEVER commit audio or large arrays
+data/
+cache/
+checkpoints/
+wandb/
+*.flac
+*.wav
+*.mp3
+*.zip
+*.npy
+*.npz
+*.pt
+*.ckpt
+
+# editor / os
+.DS_Store
+.vscode/
+.idea/

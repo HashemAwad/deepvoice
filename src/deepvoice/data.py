@@ -1,0 +1,35 @@
+"""ASVspoof 2019 LA protocol loading. Label 1 = fake (spoof), 0 = real (bonafide)."""
+
+from pathlib import Path
+
+import pandas as pd
+
+COLUMNS = ["speaker", "utt", "env", "attack", "key"]
+
+# TODO(verify on the real download): folder and protocol file names below are from memory.
+SPLITS = {
+    "train": ("ASVspoof2019_LA_train", "ASVspoof2019.LA.cm.train.trn.txt"),
+    "dev": ("ASVspoof2019_LA_dev", "ASVspoof2019.LA.cm.dev.trl.txt"),
+    "eval": ("ASVspoof2019_LA_eval", "ASVspoof2019.LA.cm.eval.trl.txt"),
+}
+
+
+def read_protocol(path):
+    """Parse one protocol file: `speaker utt env attack key`, key in {bonafide, spoof}."""
+    df = pd.read_csv(path, sep=r"\s+", header=None, names=COLUMNS)
+    bad = set(df["key"]) - {"bonafide", "spoof"}
+    if bad:
+        raise ValueError(f"unexpected key values in {path}: {bad}")
+    df["label"] = (df["key"] == "spoof").astype(int)
+    df["attack"] = df["attack"].replace("-", "bonafide")
+    return df
+
+
+def load_split(root, split):
+    """Protocol dataframe for train/dev/eval with an added `path` column to each .flac."""
+    folder, proto = SPLITS[split]
+    root = Path(root)
+    df = read_protocol(root / "ASVspoof2019_LA_cm_protocols" / proto)
+    df["path"] = [str(root / folder / "flac" / f"{u}.flac") for u in df["utt"]]
+    df["split"] = split
+    return df
