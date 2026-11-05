@@ -6,10 +6,10 @@ __pycache__/
 .ruff_cache/
 .ipynb_checkpoints/
 
-# data and caches: NEVER commit audio or large arrays
-data/
-cache/
-checkpoints/
+# data and caches: NEVER commit audio or large arrays (anchored to the repo root)
+/data/
+/cache/
+/checkpoints/
 wandb/
 *.flac
 *.wav
@@ -19,8 +19,11 @@ wandb/
 *.npz
 *.pt
 *.ckpt
+*.safetensors
+*.bin
 
 # editor / os
 .DS_Store
+Thumbs.db
 .vscode/
 .idea/

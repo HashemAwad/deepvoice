@@ -5,13 +5,27 @@ import pandas as pd
 from sklearn.metrics import roc_curve
 
 
-def eer(labels, scores):
-    """Equal error rate and the threshold where it occurs. Returns (eer, threshold)."""
+def _check(labels, other, name):
     labels = np.asarray(labels)
-    scores = np.asarray(scores, dtype=float)
+    other = np.asarray(other)
+    if labels.shape != other.shape or labels.ndim != 1:
+        raise ValueError(f"labels and {name} must be 1-D and the same length")
+    if not set(np.unique(labels)) <= {0, 1}:
+        raise ValueError("labels must be 0 (real) or 1 (fake)")
+    return labels, other
+
+
+def eer(labels, scores):
+    """Equal error rate and the threshold where it occurs. Returns (eer, threshold).
+
+    A clip is called fake when score >= threshold.
+    """
+    labels, scores = _check(labels, scores, "scores")
+    scores = scores.astype(float)
     if labels.min() == labels.max():
         raise ValueError("EER needs both classes present")
-    fpr, tpr, thr = roc_curve(labels, scores)
+    # drop_intermediate=False: keep every threshold so the EER point is exact
+    fpr, tpr, thr = roc_curve(labels, scores, drop_intermediate=False)
     fnr = 1 - tpr
     i = int(np.argmin(np.abs(fnr - fpr)))
     return float((fpr[i] + fnr[i]) / 2), float(thr[i])
@@ -22,9 +36,11 @@ def speaker_bootstrap_eer(labels, scores, speakers, n_boot=1000, alpha=0.05, see
 
     Returns (point_eer, ci_low, ci_high). Resamples that lose a class are skipped.
     """
-    labels = np.asarray(labels)
-    scores = np.asarray(scores, dtype=float)
+    labels, scores = _check(labels, scores, "scores")
+    scores = scores.astype(float)
     speakers = np.asarray(speakers)
+    if speakers.shape != labels.shape:
+        raise ValueError("speakers must have the same length as labels")
     groups = pd.Series(np.arange(len(labels))).groupby(speakers).indices
     keys = list(groups)
     rng = np.random.default_rng(seed)
@@ -44,8 +60,11 @@ def speaker_bootstrap_eer(labels, scores, speakers, n_boot=1000, alpha=0.05, see
 def ece(labels, probs, n_bins=15):
     """Expected calibration error of P(fake): gap between mean predicted P(fake) and the
     observed fake rate, averaged over equal-width probability bins."""
-    labels = np.asarray(labels, dtype=float)
-    probs = np.asarray(probs, dtype=float)
+    labels, probs = _check(labels, probs, "probs")
+    labels = labels.astype(float)
+    probs = probs.astype(float)
+    if probs.min() < 0 or probs.max() > 1:
+        raise ValueError("probs must be in [0, 1]; apply a sigmoid/softmax first")
     bins = np.minimum((probs * n_bins).astype(int), n_bins - 1)
     total = 0.0
     for b in range(n_bins):

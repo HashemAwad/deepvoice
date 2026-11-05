@@ -9,13 +9,23 @@ and measure how they generalize to unseen attacks and to In-the-Wild; we test fo
 
 ## Setup
 
-```bash
-uv sync                  # core deps (CPU: features, sklearn, metrics)
-uv sync --extra dl       # on the GPU machine: torch, transformers, peft, optuna
-uv run pytest            # should pass before you push
-```
+Prerequisite: **git**. Everything else (uv, Python 3.12, all packages) is installed by the script.
 
-Python 3.11 or 3.12. Run everything through `uv run`.
+| OS | Command (from the repo root) |
+|---|---|
+| macOS / Linux | `./scripts/setup.sh` |
+| Windows (PowerShell) | `powershell -ExecutionPolicy Bypass -File .\scripts\setup.ps1` |
+
+Add `--dl` (macOS/Linux) or `-Dl` (Windows) for the deep-learning stack (torch, transformers,
+peft, optuna). The script installs `uv` if missing, installs Python 3.12, syncs the locked
+dependencies, enables notebook output stripping, and runs the tests.
+
+- **GPU work belongs on the Linux compute machine**: there `uv sync --extra dl` pulls
+  CUDA-enabled torch. On Mac, torch uses Apple's MPS backend. On Windows, PyPI torch is CPU-only.
+- Manual equivalent: `uv sync` (add `--extra dl` if needed), `uv run nbstripout --install`,
+  `uv run pytest`.
+- Run everything through `uv run`, e.g. `uv run python -m ...`. The Python version is pinned
+  in `.python-version`.
 
 ## Layout
 
@@ -23,9 +33,11 @@ Python 3.11 or 3.12. Run everything through `uv run`.
 src/deepvoice/   data.py (protocols), metrics.py (EER, bootstrap CI, ECE); add features.py,
                  silence.py, xlsr.py, models.py as we go
 tests/           pytest; every metric/parser gets a small test
-notebooks/       analysis only; real code lives in src/ (run `nbstripout --install` once)
+scripts/         setup.sh (macOS/Linux) and setup.ps1 (Windows)
+notebooks/       analysis only; real code lives in src/ (setup script enables nbstripout)
 results/         one CSV per experiment + small figures (committed)
-model/           final model card; weights go to a release / HF Hub, not git
+model/           final model card; large weights go to a release / HF Hub, not git
+                 (a small final model such as an sklearn .joblib may be committed)
 hypotheses.md    frozen + hashed before any eval run
 data/ cache/     GITIGNORED: raw audio, features, checkpoints
 ```

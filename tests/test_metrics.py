@@ -10,6 +10,34 @@ def test_eer_perfect_and_inverted():
     assert eer(y, [0.9, 0.8, 0.7, 0.3, 0.2, 0.1])[0] == 1.0
 
 
+def test_eer_hand_computed():
+    # reals .1 .2 .3 .6, fakes .4 .5 .7 .8. At threshold .45: one fake missed, one real flagged
+    y = [0, 0, 0, 0, 1, 1, 1, 1]
+    s = [0.1, 0.2, 0.3, 0.6, 0.4, 0.5, 0.7, 0.8]
+    value, thr = eer(y, s)
+    assert value == pytest.approx(0.25)
+    assert 0.4 < thr <= 0.5
+
+
+def test_input_validation():
+    with pytest.raises(ValueError):
+        eer([0, 1], [0.1, 0.2, 0.3])  # length mismatch
+    with pytest.raises(ValueError):
+        eer([0, 2], [0.1, 0.2])  # labels not 0/1
+    with pytest.raises(ValueError):
+        ece([0, 1], [0.2, 1.5])  # prob out of range
+
+
+def test_bootstrap_is_reproducible():
+    rng = np.random.default_rng(3)
+    y = rng.integers(0, 2, 500)
+    s = y + rng.normal(0, 1, 500)
+    spk = rng.integers(0, 20, 500)
+    assert speaker_bootstrap_eer(y, s, spk, n_boot=50, seed=7) == speaker_bootstrap_eer(
+        y, s, spk, n_boot=50, seed=7
+    )
+
+
 def test_eer_random_scores_near_half():
     rng = np.random.default_rng(0)
     y = rng.integers(0, 2, 20000)

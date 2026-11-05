@@ -1,0 +1,4 @@
+# normalize line endings; scripts must keep the endings their shell expects
+* text=auto
+*.sh text eol=lf
+*.lock text eol=lf
