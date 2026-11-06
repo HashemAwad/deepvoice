@@ -100,14 +100,17 @@ XLS-R-300M [3] is a 300M-parameter speech transformer pretrained without labels 
 regression on top is the detector. We expect it to beat hand-made features because its layers encode
 fine acoustic detail learned from far more speech, and self-supervised features are reported to
 generalize better to unseen spoofing systems [4]. \textbf{Progress}: embeddings are extracted for all
-ASVspoof clips (train, dev, eval; 2\,h on the laptop GPU); ITW is running. \textbf{Preliminary results} (Fig.~2b): early
-layers are best, with dev EER 0.00\% [0.00, 0.02] at layer 3 and 0.01\% at layer 6, against 0.49\% for
-the best untuned classical model. Dev is now saturated, because it repeats the training attacks; eval
-(H3 requires a margin of at least 5\pp) is the real test. Cost so far: 64\,ms/clip extraction on the
+ASVspoof clips (train, dev, eval; 2\,h on the laptop GPU); ITW is running. \textbf{Results} (Fig.~2b): early layers are best on dev
+(0.00\% [0.00, 0.02] at layer 3, 0.01\% at layer 6). Because dev is saturated, we fixed the choice rule
+before eval: lowest dev EER, with ties (inside its CI) broken by speaker-grouped CV; this selects
+logistic regression on layer 3 (a small MLP did slightly worse on dev). Scored once on eval it reaches
+\textbf{2.37\%} [1.53, 3.06], 11.7\pp{} better than tuned rung 1 (14.1\%), so the in-distribution part
+of \textbf{H3 is supported}. It also handles the attacks that broke rung 1 (A17: 4.4\%, A18: 0.6\%);
+its worst attack is A15 (5.5\%). Whether this edge shrinks on In-the-Wild is the next test. Cost so far: 64\,ms/clip extraction on the
 laptop GPU vs 23\,ms/clip for LFCC on one CPU core; the classifier trains in under 1\,s.
 
 \section*{6\quad Remaining plan and risks (to 20 November)}
-\textbf{Nov 7--8}: finish E1 (rung 2 on eval, cost table), XLS-R layer choice and small MLP on dev.
+\textbf{Nov 7--8}: complete the E1 table and the cost table.
 \textbf{Nov 9--10}: E4: per-attack EER for every rung (H2), ITW for every rung including rung 0 as a
 shortcut control (H3, H4). \textbf{Nov 11--12}: E5: trim silence and change loudness at test time
 (H1b), retrain with silence/gain augmentation, calibration (reliability diagrams, ECE, temperature
@@ -119,7 +122,7 @@ dev: most new text-to-speech attacks start speaking almost immediately, so a goo
 not prove that a model detects ``fakeness''; (ii) the unseen voice-conversion attacks A17 and A18 defeat
 both the silence cue and LFCC, while the repeated A19 does not, so rung 1 has learned the training
 attacks rather than a general cue; the dev-to-eval jump (0.13\% to 14.1\%) is the overfitting story of
-E3 and the main test for XLS-R; (iii) a random forest on the nine
+E3, and XLS-R narrows it (0.00\% to 2.4\%) but does not close it; (iii) a random forest on the nine
 silence/energy features alone reaches 17\% dev EER, so energy statistics are a shortcut too.
 \textbf{Risks}: dev is saturated, which makes model selection weakly informative (we compare with
 grouped CV); ITW differs in speakers, microphones and generators at once, so we report it as a bundled
@@ -153,7 +156,7 @@ attack (left box train, right box dev). (c) Clip duration by class.}
 \includegraphics[width=0.56\textwidth]{rung0_eval_per_attack.pdf}\hfill
 \includegraphics[width=0.42\textwidth]{xlsr_layers.pdf}
 \caption{(a) Rung 0 (silence/duration only, depth-3 tree) on ASVspoof eval, per attack.
-(b) Frozen XLS-R-300M: dev EER of a logistic regression on each saved layer.}
+(b) Frozen XLS-R-300M: dev EER of a logistic regression on each saved layer (layer 3 chosen; eval 2.37\%).}
 \end{figure}
 \begin{figure}[h]\centering
 \includegraphics[width=\textwidth]{e2_features.pdf}
