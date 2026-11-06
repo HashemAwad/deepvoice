@@ -66,7 +66,7 @@ eval once per final model.
 
 \section*{4\quad Classical baseline}
 \textbf{Rung 0} (four silence/duration numbers; logistic regression and a depth-3 tree) reaches
-28.0\% dev EER. Scored once on eval, the tree reaches \textbf{19.1\%} [18.6, 19.5]: below the 25\% bar,
+28.0\% dev EER. Scored once on eval, the tree (chosen on dev) reaches \textbf{19.1\%} [18.6, 19.5] (the non-selected logistic regression was also scored: 18.1\%): below the 25\% bar,
 so \textbf{H1a is supported}, consistent with [5]. Per attack (Fig.~2a) it catches 10 of 13 eval attacks at 1--11\% EER
 without hearing the voice, and is at chance only on A17--A19. \textbf{Rung 1} (Fig.~3): LFCC dominates;
 dropping it raises dev EER from about 0.5--1\% to 6--9\%, while dropping S, M or P barely matters.
@@ -142,7 +142,7 @@ and data augmentation, \emph{Odyssey} 2022.
 [5] N.\ M.\ M\"uller et al., Speech is silver, silence is golden: what do ASVspoof-trained models
 really learn?, \emph{ASVspoof Workshop} 2021.\par
 \textbf{AI disclosure.} Claude (Anthropic) was used to write code, run experiments and draft this
-report. Every number comes from the code and result files in our repository:
+report. Every number comes from the result files in our repository; a few were produced by one-off scripts that will move into the notebooks:
 \url{https://github.com/HashemAwad/deepvoice}.}
 
 \clearpage
