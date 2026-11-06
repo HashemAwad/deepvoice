@@ -22,7 +22,13 @@ dependencies = [
 dl = ["torch", "torchaudio", "transformers", "accelerate", "peft", "optuna"]
 
 [dependency-groups]
-dev = ["pytest", "ruff", "nbstripout", "ipykernel"]
+dev = [
+    "pytest",
+    "ruff",
+    "nbstripout",
+    "ipykernel",
+    "nbconvert>=7.17.2",
+]
 
 [build-system]
 requires = ["hatchling"]
