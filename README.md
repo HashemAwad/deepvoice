@@ -5,7 +5,7 @@
 and measure how they generalize to unseen attacks and to In-the-Wild; we test for shortcuts
 (silence, loudness), calibration, and whether the pretrained model is worth its cost.
 
-> Status: early setup. Hypotheses file is a **draft** until frozen (see below).
+> Status: Tier 1 in progress. `hypotheses.md` is **frozen** (hash below); eval and In-the-Wild may now be used.
 
 ## Setup
 
@@ -85,4 +85,10 @@ Facts checked against the real files (2026-11-05):
 
 ## Hypotheses hash
 
-Not frozen yet. When frozen, record `sha256sum hypotheses.md` here.
+Frozen in commit `1d896cd` on 2026-11-06, before any model was run on ASVspoof eval or In-the-Wild.
+
+```
+sha256  9494fc18b857575a81586bd6cd7f803c3bf023f780040d894bda5db07b00b76b  hypotheses.md
+```
+
+Check it: `shasum -a 256 hypotheses.md` (macOS) or `sha256sum hypotheses.md` (Linux).
