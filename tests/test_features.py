@@ -49,3 +49,27 @@ def test_cache_and_ablation_subset(tmp_path):
     assert sub.shape == (2, 40)
     with pytest.raises(KeyError):
         select(out["mfcc"], "mfcc", n_coef=41)
+
+
+def test_load_xy_joins_groups_in_protocol_order(tmp_path):
+    from deepvoice.features import load_xy
+
+    proto = pd.DataFrame({"file": ["a", "b", "c"], "speaker": ["s1", "s1", "s2"],
+                          "attack": ["bonafide", "A01", "A02"], "label": [0, 1, 1],
+                          "split": ["dev", "dev", "train"], "path": ["x", "y", "z"]})
+    proto.to_parquet(tmp_path / "protocols.parquet")
+    (tmp_path / "features").mkdir()
+    cep = pd.DataFrame(np.arange(2 * len(column_names("lfcc"))).reshape(2, -1),
+                       columns=column_names("lfcc"))
+    cep.insert(0, "file", ["a", "b"])
+    cep.to_parquet(tmp_path / "features" / "lfcc_dev.parquet")
+    sil = pd.DataFrame({"file": ["a", "b"], **{c: [0.0, 1.0] for c in
+                        ["duration", "lead_sil", "trail_sil", "sil_ratio", "energy_mean",
+                         "energy_std", "energy_p10", "energy_p90", "energy_max"]}})
+    sil.to_parquet(tmp_path / "features" / "silence_dev.parquet")
+    xy = load_xy("dev", groups=("silence", "lfcc"), n_coef=13, deltas=0, root=tmp_path)
+    assert list(xy["file"]) == ["a", "b"] and list(xy["label"]) == [0, 1]
+    assert xy.shape[1] == 4 + 9 + 13 * 2
+    sil.iloc[::-1].to_parquet(tmp_path / "features" / "silence_dev.parquet")
+    with pytest.raises(ValueError):
+        load_xy("dev", groups=("silence",), root=tmp_path)

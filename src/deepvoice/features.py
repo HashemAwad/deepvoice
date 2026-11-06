@@ -122,3 +122,34 @@ def select(table, group, n_coef=N_CEP, deltas=2, stats=("mean", "std")):
     keep = [f"{group}_d{d}_c{c:02d}_{s}" for d in range(deltas + 1) for c in range(n_coef)
             for s in stats]
     return table[keep]
+
+
+SILENCE = ["lead_sil", "trail_sil", "sil_ratio", "duration", "energy_mean", "energy_std",
+           "energy_p10", "energy_p90", "energy_max"]
+
+
+def load_xy(split, groups=("lfcc",), n_coef=20, deltas=2, stats=("mean", "std"),
+            root="data"):
+    """One modelling table for an ASVspoof split: file, label, speaker, attack + feature columns.
+
+    Groups follow the plan: "silence" (S), "mfcc" (M), "lfcc" (L), "spec" (P). Cepstral groups
+    use `n_coef`, `deltas` and `stats`; the spectral group uses `stats`; silence uses all 9
+    columns. Feature columns are every column after the first four.
+    """
+    root = Path(root)
+    p = pd.read_parquet(root / "protocols.parquet")
+    out = p[p["split"] == split][["file", "label", "speaker", "attack"]].reset_index(drop=True)
+    parts = [out]
+    for g in groups:
+        t = pd.read_parquet(root / "features" / f"{g}_{split}.parquet")
+        if list(t["file"]) != list(out["file"]):
+            raise ValueError(f"{g}_{split} rows do not match the protocol order")
+        if g in ("mfcc", "lfcc"):
+            parts.append(select(t, g, n_coef, deltas, stats))
+        elif g == "spec":
+            parts.append(t[[f"spec_{r}_{s}" for r in SPECTRAL for s in stats]])
+        elif g == "silence":
+            parts.append(t[SILENCE])
+        else:
+            raise ValueError(f"unknown feature group {g!r}")
+    return pd.concat(parts, axis=1)

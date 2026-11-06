@@ -6,7 +6,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -31,6 +31,8 @@ def build(name, seed, **params):
         return DecisionTreeClassifier(class_weight="balanced", random_state=seed, **params)
     if name == "rf":
         return RandomForestClassifier(class_weight="balanced", random_state=seed, **params)
+    if name == "hgb":
+        return HistGradientBoostingClassifier(class_weight="balanced", random_state=seed, **params)
     raise ValueError(f"unknown model {name!r}")
 
 
