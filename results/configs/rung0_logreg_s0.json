@@ -1,6 +1,7 @@
 {
   "rung": 0,
   "model": "logreg",
+  "feature_set": null,
   "seed": 0,
   "params": {
     "C": 1.0

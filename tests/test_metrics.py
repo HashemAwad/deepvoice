@@ -84,3 +84,13 @@ def test_eer_matches_brute_force_on_continuous_scores():
     frr = [((s < t) & (y == 1)).sum() / (y == 1).sum() for t in np.sort(s)]
     brute = min(max(a, b) for a, b in zip(far, frr))
     assert eer(y, s)[0] == pytest.approx(brute, abs=1e-3)
+
+
+def test_per_attack_eer():
+    from deepvoice.metrics import per_attack_eer
+
+    y = [0, 0, 1, 1, 1, 1]
+    s = [0.1, 0.2, 0.9, 0.8, 0.15, 0.05]  # A01 easy, A02 scores like (or below) real clips
+    a = ["bonafide", "bonafide", "A01", "A01", "A02", "A02"]
+    out = per_attack_eer(y, s, a)
+    assert set(out) == {"A01", "A02"} and out["A01"] == 0.0 and out["A02"] >= 0.5

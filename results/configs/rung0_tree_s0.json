@@ -1,6 +1,7 @@
 {
   "rung": 0,
   "model": "tree",
+  "feature_set": null,
   "seed": 0,
   "params": {
     "max_depth": 3

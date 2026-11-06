@@ -79,3 +79,12 @@ def ece(labels, probs, n_bins=15):
         if m.any():
             total += m.mean() * abs(probs[m].mean() - labels[m].mean())
     return float(total)
+
+
+def per_attack_eer(labels, scores, attacks):
+    """EER of each attack: that attack's fake clips against all real clips. Returns {attack: eer}."""
+    labels, scores = _check(labels, scores, "scores")
+    attacks = np.asarray(attacks)
+    real = labels == 0
+    return {a: eer(labels[real | (attacks == a)], scores[real | (attacks == a)])[0]
+            for a in sorted(set(attacks[labels == 1]))}
