@@ -35,3 +35,31 @@ def load_split(root, split):
     df["path"] = [str(root / folder / "flac" / f"{u}.flac") for u in df["utt"]]
     df["split"] = split
     return df
+
+
+def load_protocols(root, splits=("train", "dev", "eval")):
+    """One table for all splits: file, speaker, attack, label, split, path.
+
+    Reads protocol text only (no audio), so listing eval here does not count as using it.
+    """
+    df = pd.concat([load_split(root, s) for s in splits], ignore_index=True)
+    df = df.rename(columns={"utt": "file"})
+    return df[["file", "speaker", "attack", "label", "split", "path"]]
+
+
+def summarize(df):
+    """Per split: real/fake counts, total, number of speakers and the attack IDs present."""
+    rows = []
+    for split, g in df.groupby("split", sort=False):
+        attacks = sorted(set(g["attack"]) - {"bonafide"})
+        rows.append(
+            {
+                "split": split,
+                "real": int((g["label"] == 0).sum()),
+                "fake": int((g["label"] == 1).sum()),
+                "total": len(g),
+                "speakers": g["speaker"].nunique(),
+                "attacks": f"{attacks[0]}-{attacks[-1]} ({len(attacks)})" if attacks else "",
+            }
+        )
+    return pd.DataFrame(rows)

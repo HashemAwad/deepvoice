@@ -1,6 +1,6 @@
 import pytest
 
-from deepvoice.data import read_protocol
+from deepvoice.data import SPLITS, load_protocols, read_protocol, summarize
 
 SAMPLE = """LA_0079 LA_T_1138215 - - bonafide
 LA_0079 LA_T_1271820 - - bonafide
@@ -23,3 +23,17 @@ def test_read_protocol_rejects_unknown_key(tmp_path):
     p.write_text("LA_0079 LA_T_1 - - maybe\n")
     with pytest.raises(ValueError):
         read_protocol(p)
+
+
+def test_load_protocols_and_summarize(tmp_path):
+    proto_dir = tmp_path / "ASVspoof2019_LA_cm_protocols"
+    proto_dir.mkdir()
+    (proto_dir / SPLITS["train"][1]).write_text(SAMPLE)
+    (proto_dir / SPLITS["dev"][1]).write_text("LA_0069 LA_D_1 - - bonafide\nLA_0069 LA_D_2 - A03 spoof\n")
+    df = load_protocols(tmp_path, splits=("train", "dev"))
+    assert list(df.columns) == ["file", "speaker", "attack", "label", "split", "path"]
+    assert df["path"].iloc[0].endswith("ASVspoof2019_LA_train/flac/LA_T_1138215.flac")
+    s = summarize(df).set_index("split")
+    assert s.loc["train", ["real", "fake", "total", "speakers"]].tolist() == [2, 2, 4, 2]
+    assert s.loc["train", "attacks"] == "A01-A02 (2)"
+    assert s.loc["dev", "speakers"] == 1
