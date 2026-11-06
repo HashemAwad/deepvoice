@@ -54,6 +54,28 @@ def load_protocols(root, splits=("train", "dev", "eval")):
     return df[["file", "speaker", "attack", "label", "split", "path"]]
 
 
+def load_itw(root="data/release_in_the_wild"):
+    """In-the-Wild metadata in the ASVspoof table format: file, speaker, attack, label, split, path.
+
+    meta.csv has columns file, speaker, label with labels "bona-fide" / "spoof". There are no
+    attack IDs (unknown generators), so attack is "bonafide" or "unknown"; split is "itw".
+    """
+    root = Path(root)
+    m = pd.read_csv(root / "meta.csv")
+    bad = set(m["label"]) - {"bona-fide", "spoof"}
+    if bad:
+        raise ValueError(f"unexpected labels in {root / 'meta.csv'}: {bad}")
+    df = pd.DataFrame({
+        "file": m["file"].str.removesuffix(".wav"),
+        "speaker": m["speaker"],
+        "attack": m["label"].map({"bona-fide": "bonafide", "spoof": "unknown"}),
+        "label": (m["label"] == "spoof").astype(int),
+        "split": "itw",
+        "path": [str(root / f) for f in m["file"]],
+    })
+    return df
+
+
 def summarize(df):
     """Per split: real/fake counts, total, number of speakers and the attack IDs present."""
     rows = []

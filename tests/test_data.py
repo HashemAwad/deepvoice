@@ -37,3 +37,13 @@ def test_load_protocols_and_summarize(tmp_path):
     assert s.loc["train", ["real", "fake", "total", "speakers"]].tolist() == [2, 2, 4, 2]
     assert s.loc["train", "attacks"] == "A01-A02 (2)"
     assert s.loc["dev", "speakers"] == 1
+
+
+def test_load_itw(tmp_path):
+    from deepvoice.data import load_itw
+
+    (tmp_path / "meta.csv").write_text("file,speaker,label\n0.wav,A B,spoof\n1.wav,A B,bona-fide\n")
+    df = load_itw(tmp_path)
+    assert list(df["file"]) == ["0", "1"] and list(df["label"]) == [1, 0]
+    assert list(df["attack"]) == ["unknown", "bonafide"] and set(df["split"]) == {"itw"}
+    assert df["path"].iloc[0].endswith("0.wav")
