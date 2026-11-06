@@ -30,12 +30,14 @@ dependencies, enables notebook output stripping, and runs the tests.
 ## Layout
 
 ```
-src/deepvoice/   data.py (protocols), metrics.py (EER, bootstrap CI, ECE); add features.py,
-                 silence.py, xlsr.py, models.py as we go
+src/deepvoice/   data.py (protocols), metrics.py (EER, bootstrap CI, ECE), features.py,
+                 silence.py, xlsr.py, models.py
 tests/           pytest; every metric/parser gets a small test
-scripts/         setup.sh (macOS/Linux) and setup.ps1 (Windows)
-notebooks/       analysis only; real code lives in src/ (setup script enables nbstripout)
-results/         one CSV per experiment + small figures (committed)
+scripts/         setup.sh (macOS/Linux), setup.ps1 (Windows), download_data.sh
+notebooks/       00_audit ... 05_shortcuts_calibration; analysis only, real code lives in src/
+                 (setup script enables nbstripout)
+results/         one CSV per experiment + small figures (committed); configs/ = one JSON per run
+CLAUDE.md        working rules for the team and for Claude Code
 model/           final model card; large weights go to a release / HF Hub, not git
                  (a small final model such as an sklearn .joblib may be committed)
 hypotheses.md    frozen + hashed before any eval run
