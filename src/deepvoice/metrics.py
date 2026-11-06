@@ -18,7 +18,10 @@ def _check(labels, other, name):
 def eer(labels, scores):
     """Equal error rate and the threshold where it occurs. Returns (eer, threshold).
 
-    A clip is called fake when score >= threshold.
+    A clip is called fake when score >= threshold. The EER is read where the straight line
+    between the two ROC points around the crossing meets fpr = fnr, so models with few distinct
+    scores (e.g. a shallow tree) get a value for an operating point that exists; for continuous
+    scores this equals the usual nearest-point estimate. The threshold is the nearer ROC point's.
     """
     labels, scores = _check(labels, scores, "scores")
     scores = scores.astype(float)
@@ -27,8 +30,12 @@ def eer(labels, scores):
     # drop_intermediate=False: keep every threshold so the EER point is exact
     fpr, tpr, thr = roc_curve(labels, scores, drop_intermediate=False)
     fnr = 1 - tpr
-    i = int(np.argmin(np.abs(fnr - fpr)))
-    return float((fpr[i] + fnr[i]) / 2), float(thr[i])
+    i = int(np.argmax(fnr <= fpr))  # first point past the crossing; point 0 has fpr=0, fnr=1
+    d0, d1 = fpr[i - 1] - fnr[i - 1], fpr[i] - fnr[i]
+    a = d0 / (d0 - d1)  # where the line between points i-1 and i crosses fpr = fnr
+    value = fpr[i - 1] + a * (fpr[i] - fpr[i - 1])
+    j = i if abs(d1) <= abs(d0) else i - 1
+    return float(value), float(thr[j])
 
 
 def speaker_bootstrap_eer(labels, scores, speakers, n_boot=1000, alpha=0.05, seed=0):

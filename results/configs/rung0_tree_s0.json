@@ -1,0 +1,16 @@
+{
+  "rung": 0,
+  "model": "tree",
+  "seed": 0,
+  "params": {
+    "max_depth": 3
+  },
+  "features": [
+    "lead_sil",
+    "trail_sil",
+    "sil_ratio",
+    "duration"
+  ],
+  "train": "25380 clips",
+  "n_boot": 1000
+}

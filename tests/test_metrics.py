@@ -66,3 +66,21 @@ def test_ece_calibrated_vs_overconfident():
     assert ece(calibrated, p) < 0.02
     always_fake = np.ones(50000)
     assert ece(np.zeros(50000), always_fake) == 1.0
+
+
+def test_eer_interpolates_between_coarse_scores():
+    # reals 0 0 1 1, fakes 1 1 1 1: ROC points (fpr, fnr) = (0, 1), (0.5, 0), (1, 0).
+    # No threshold equalizes the errors; the line from (0, 1) to (0.5, 0) meets fpr = fnr at 1/3.
+    value, thr = eer([0, 0, 0, 0, 1, 1, 1, 1], [0, 0, 1, 1, 1, 1, 1, 1])
+    assert value == pytest.approx(1 / 3)
+    assert thr == 1.0
+
+
+def test_eer_matches_brute_force_on_continuous_scores():
+    rng = np.random.default_rng(4)
+    y = rng.integers(0, 2, 3000)
+    s = y + rng.normal(0, 1, 3000)
+    far = [((s >= t) & (y == 0)).sum() / (y == 0).sum() for t in np.sort(s)]
+    frr = [((s < t) & (y == 1)).sum() / (y == 1).sum() for t in np.sort(s)]
+    brute = min(max(a, b) for a, b in zip(far, frr))
+    assert eer(y, s)[0] == pytest.approx(brute, abs=1e-3)
