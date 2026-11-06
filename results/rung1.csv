@@ -1,0 +1,9 @@
+rung,model,config,seed,dataset,split,eer,ci_low,ci_high,train_time,latency
+1,logreg:mfcc20_dd_meanstd,rung1_logreg_mfcc20_dd_meanstd_s0,0,asvspoof,train,0.0910853,0.0749494,0.106593,0.0458098,0.000104127
+1,logreg:mfcc20_dd_meanstd,rung1_logreg_mfcc20_dd_meanstd_s0,0,asvspoof,dev,0.147567,0.118793,0.179698,0.0458098,0.000120032
+1,rf:mfcc20_dd_meanstd,rung1_rf_mfcc20_dd_meanstd_s0,0,asvspoof,train,0,0,0,4.46535,0.00289516
+1,rf:mfcc20_dd_meanstd,rung1_rf_mfcc20_dd_meanstd_s0,0,asvspoof,dev,0.0869521,0.0681863,0.109566,4.46535,0.00288011
+1,logreg:lfcc20_dd_meanstd,rung1_logreg_lfcc20_dd_meanstd_s0,0,asvspoof,train,0.00864035,0.00605123,0.0119556,0.0332446,0.000101803
+1,logreg:lfcc20_dd_meanstd,rung1_logreg_lfcc20_dd_meanstd_s0,0,asvspoof,dev,0.0200484,0.00909895,0.0320313,0.0332446,0.000103752
+1,rf:lfcc20_dd_meanstd,rung1_rf_lfcc20_dd_meanstd_s0,0,asvspoof,train,0,0,0,4.94639,0.00243502
+1,rf:lfcc20_dd_meanstd,rung1_rf_lfcc20_dd_meanstd_s0,0,asvspoof,dev,0.0137026,0.00466542,0.0238152,4.94639,0.00256092

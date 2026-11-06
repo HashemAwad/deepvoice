@@ -6,6 +6,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -28,23 +29,29 @@ def build(name, seed, **params):
         )
     if name == "tree":
         return DecisionTreeClassifier(class_weight="balanced", random_state=seed, **params)
+    if name == "rf":
+        return RandomForestClassifier(class_weight="balanced", random_state=seed, **params)
     raise ValueError(f"unknown model {name!r}")
 
 
 def run(rung, name, features, train, evals, seed=0, params=None, experiment=None,
-        results_dir="results", n_boot=1000):
+        results_dir="results", n_boot=1000, feature_set=None):
     """Fit `name` on `train`, score every (dataset, split, frame) in `evals`, record results.
 
     `train` and each eval frame need the `features` columns plus `label` and `speaker`.
     Writes results/configs/<config>.json and appends one row per eval to
-    results/<experiment>.csv. Returns (fitted model, list of result rows).
+    results/<experiment>.csv. `feature_set` (e.g. "mfcc20_dd") is added to the model label and
+    config name so runs of one model on different features stay apart.
+    Returns (fitted model, list of result rows).
     """
     params = params or {}
     experiment = experiment or f"rung{rung}"
-    config = f"{experiment}_{name}_s{seed}"
+    label = f"{name}:{feature_set}" if feature_set else name
+    config = f"{experiment}_{name}_{feature_set}_s{seed}" if feature_set else f"{experiment}_{name}_s{seed}"
     results_dir = Path(results_dir)
     (results_dir / "configs").mkdir(parents=True, exist_ok=True)
-    cfg = {"rung": rung, "model": name, "seed": seed, "params": params, "features": list(features),
+    cfg = {"rung": rung, "model": name, "feature_set": feature_set, "seed": seed, "params": params,
+           "features": list(features),
            "train": f"{len(train)} clips", "n_boot": n_boot}
     (results_dir / "configs" / f"{config}.json").write_text(json.dumps(cfg, indent=2) + "\n")
 
@@ -63,7 +70,7 @@ def run(rung, name, features, train, evals, seed=0, params=None, experiment=None
         point, lo, hi = speaker_bootstrap_eer(
             df["label"].to_numpy(), scores, df["speaker"].to_numpy(), n_boot=n_boot, seed=seed
         )
-        rows.append(dict(zip(RESULT_COLUMNS, [rung, name, config, seed, dataset, split,
+        rows.append(dict(zip(RESULT_COLUMNS, [rung, label, config, seed, dataset, split,
                                               point, lo, hi, train_time, latency_ms])))
     out = results_dir / f"{experiment}.csv"
     new = pd.DataFrame(rows, columns=RESULT_COLUMNS)

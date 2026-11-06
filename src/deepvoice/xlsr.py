@@ -84,3 +84,31 @@ def time_it(paths, model=None, batch_seconds=60.0):
 
 def cache_path(name, root="data/features"):
     return Path(root) / f"xlsr300m_{name}.npy"
+
+
+def extract_cached(df, name, root="data/features", chunk=2000, model=None):
+    """Embeddings for every row of `df` -> <root>/xlsr300m_<name>.npy (n, 9 layers, 1024), fp16,
+    rows in `df` order, plus <name>_files.txt listing the clip ids. Work is saved per chunk in
+    <root>/xlsr300m_<name>_parts/, so an interrupted run resumes where it stopped."""
+    out = cache_path(name, root)
+    files = out.with_name(f"xlsr300m_{name}_files.txt")
+    if out.exists():
+        if files.read_text().split() != list(df["file"]):
+            raise ValueError(f"{out} does not match the requested clips")
+        return np.load(out, mmap_mode="r")
+    parts = out.with_name(f"xlsr300m_{name}_parts")
+    parts.mkdir(parents=True, exist_ok=True)
+    paths = list(df["path"])
+    n_chunks = (len(paths) + chunk - 1) // chunk
+    t0 = time.time()
+    for c in range(n_chunks):
+        part = parts / f"{c:04d}.npy"
+        if part.exists():
+            continue
+        model = model or load_model()
+        np.save(part, embed_paths(model, paths[c * chunk:(c + 1) * chunk]))
+        print(f"{name}: chunk {c + 1}/{n_chunks} done, {time.time() - t0:.0f}s", flush=True)
+    emb = np.concatenate([np.load(parts / f"{c:04d}.npy") for c in range(n_chunks)])
+    np.save(out, emb)
+    files.write_text("\n".join(df["file"]) + "\n")
+    return emb
