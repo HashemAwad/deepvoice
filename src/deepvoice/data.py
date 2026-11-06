@@ -6,7 +6,9 @@ import pandas as pd
 
 COLUMNS = ["speaker", "utt", "env", "attack", "key"]
 
-# TODO(verify on the real download): folder and protocol file names below are from memory.
+# Names checked against the real LA.zip contents (2026-11-05). Always iterate over these protocol
+# files, never glob the flac folders: dev/eval folders hold extra files (ASV enrollment audio)
+# that are not in the CM protocols (eval: 71,933 files vs 71,237 protocol rows).
 SPLITS = {
     "train": ("ASVspoof2019_LA_train", "ASVspoof2019.LA.cm.train.trn.txt"),
     "dev": ("ASVspoof2019_LA_dev", "ASVspoof2019.LA.cm.dev.trl.txt"),
