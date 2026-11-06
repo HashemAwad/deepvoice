@@ -1,0 +1,4 @@
+split,real,fake,total,speakers,attacks
+train,2580,22800,25380,20,A01-A06 (6)
+dev,2548,22296,24844,20,A01-A06 (6)
+eval,7355,63882,71237,67,A07-A19 (13)

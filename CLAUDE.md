@@ -32,6 +32,9 @@ experiments E1-E10 and hypotheses H1-H5. Finish Tier 1 before anything else.
 
 - Machine: MacBook, Apple M5, 32 GB RAM, no NVIDIA GPU. Neural work uses torch device `"mps"`
   with `PYTORCH_ENABLE_MPS_FALLBACK=1` (set automatically when `deepvoice` is imported first).
+- The repo lives in `~/deepvoice`, NOT on the Desktop or in Documents: those are synced to
+  iCloud, which would upload ~16 GB of audio, may evict files to the cloud, and marks `.venv`
+  files hidden so `import deepvoice` fails under Python 3.12.
 - Data lives in `data/LA/` and `data/release_in_the_wild/` (see `scripts/download_data.sh`).
   Iterate over protocol files, never glob the flac folders (they hold extra ASV files).
 - Git: work on a short branch, open a PR, a teammate reviews; do not push straight to `main`.

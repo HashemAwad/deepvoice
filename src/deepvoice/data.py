@@ -16,6 +16,13 @@ SPLITS = {
 }
 
 
+# Eval attacks that reuse a training attack's algorithm (Wang et al. 2020, arXiv:1911.01601,
+# Sec. 3.1: "A16 and A19 are the known reference systems using the same algorithms as A04 and
+# A06"). They were rebuilt on different data, so they are "repeated", not identical systems.
+# The other 11 eval attacks (A07-A15, A17, A18) are unseen.
+REPEATED_ATTACKS = {"A16": "A04", "A19": "A06"}
+
+
 def read_protocol(path):
     """Parse one protocol file: `speaker utt env attack key`, key in {bonafide, spoof}."""
     df = pd.read_csv(path, sep=r"\s+", header=None, names=COLUMNS)
