@@ -1,0 +1,22 @@
+{
+  "rung": 1,
+  "model": "logreg",
+  "feature_set": "S",
+  "seed": 0,
+  "params": {
+    "C": 1.0
+  },
+  "features": [
+    "lead_sil",
+    "trail_sil",
+    "sil_ratio",
+    "duration",
+    "energy_mean",
+    "energy_std",
+    "energy_p10",
+    "energy_p90",
+    "energy_max"
+  ],
+  "train": "25380 clips",
+  "n_boot": 1000
+}

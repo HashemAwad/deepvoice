@@ -1,0 +1,26 @@
+{
+  "rung": 1,
+  "model": "rf",
+  "feature_set": "P",
+  "seed": 0,
+  "params": {
+    "n_estimators": 300,
+    "n_jobs": 6
+  },
+  "features": [
+    "spec_centroid_mean",
+    "spec_centroid_std",
+    "spec_bandwidth_mean",
+    "spec_bandwidth_std",
+    "spec_rolloff_mean",
+    "spec_rolloff_std",
+    "spec_flatness_mean",
+    "spec_flatness_std",
+    "spec_zcr_mean",
+    "spec_zcr_std",
+    "spec_hf_ratio_mean",
+    "spec_hf_ratio_std"
+  ],
+  "train": "25380 clips",
+  "n_boot": 1000
+}

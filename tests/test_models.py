@@ -23,3 +23,15 @@ def test_run_writes_config_and_results(tmp_path):
     assert 0 <= csv.loc[0, "ci_low"] <= csv.loc[0, "eer"] <= csv.loc[0, "ci_high"] < 0.5
     cfg = json.loads((tmp_path / "configs" / "t_logreg_s0.json").read_text())
     assert cfg["features"] == ["a", "b"] and cfg["seed"] == 0
+
+
+def test_grouped_cv_and_random_search():
+    from deepvoice.models import grouped_cv_eer, random_search
+
+    train, dev = _frame(500, 2), _frame(300, 3)
+    assert 0 <= grouped_cv_eer("logreg", {"C": 1.0}, train, ["a", "b"]) < 0.5
+    res = random_search("logreg", {"C": [0.01, 0.1, 1.0, 10.0]}, train, dev, ["a", "b"],
+                        n_iter=3, fixed={"max_iter": 500})
+    assert len(res) == 3 and res["dev_eer"].is_monotonic_increasing
+    assert {"cv_eer", "params", "fit_time"} <= set(res.columns)
+    assert '"max_iter": 500' in res.loc[0, "params"]

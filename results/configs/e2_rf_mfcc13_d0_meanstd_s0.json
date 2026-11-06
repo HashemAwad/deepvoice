@@ -1,0 +1,40 @@
+{
+  "rung": 1,
+  "model": "rf",
+  "feature_set": "mfcc13_d0_meanstd",
+  "seed": 0,
+  "params": {
+    "n_estimators": 300,
+    "n_jobs": 6
+  },
+  "features": [
+    "mfcc_d0_c00_mean",
+    "mfcc_d0_c00_std",
+    "mfcc_d0_c01_mean",
+    "mfcc_d0_c01_std",
+    "mfcc_d0_c02_mean",
+    "mfcc_d0_c02_std",
+    "mfcc_d0_c03_mean",
+    "mfcc_d0_c03_std",
+    "mfcc_d0_c04_mean",
+    "mfcc_d0_c04_std",
+    "mfcc_d0_c05_mean",
+    "mfcc_d0_c05_std",
+    "mfcc_d0_c06_mean",
+    "mfcc_d0_c06_std",
+    "mfcc_d0_c07_mean",
+    "mfcc_d0_c07_std",
+    "mfcc_d0_c08_mean",
+    "mfcc_d0_c08_std",
+    "mfcc_d0_c09_mean",
+    "mfcc_d0_c09_std",
+    "mfcc_d0_c10_mean",
+    "mfcc_d0_c10_std",
+    "mfcc_d0_c11_mean",
+    "mfcc_d0_c11_std",
+    "mfcc_d0_c12_mean",
+    "mfcc_d0_c12_std"
+  ],
+  "train": "25380 clips",
+  "n_boot": 1000
+}
