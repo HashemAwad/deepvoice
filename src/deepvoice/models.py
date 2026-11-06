@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
@@ -32,6 +33,12 @@ def build(name, seed, **params):
         return RandomForestClassifier(**p)
     if name == "hgb":
         return HistGradientBoostingClassifier(**p)
+    if name == "mlp":
+        # sklearn's MLP has no class weights; EER is threshold-free, so imbalance matters less
+        p.pop("class_weight")
+        p = {"hidden_layer_sizes": (256,), "alpha": 1e-3, "early_stopping": True,
+             "max_iter": 200, **p}
+        return make_pipeline(StandardScaler(), MLPClassifier(**p))
     raise ValueError(f"unknown model {name!r}")
 
 

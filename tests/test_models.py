@@ -35,3 +35,13 @@ def test_grouped_cv_and_random_search():
     assert len(res) == 3 and res["dev_eer"].is_monotonic_increasing
     assert {"cv_eer", "params", "fit_time"} <= set(res.columns)
     assert '"max_iter": 500' in res.loc[0, "params"]
+
+
+def test_mlp_builds_and_learns():
+    from deepvoice.models import fit_scores
+
+    train, dev = _frame(600, 4), _frame(300, 5)
+    (s,), _ = fit_scores("mlp", {"hidden_layer_sizes": (8,), "max_iter": 300}, train, ["a", "b"], [dev])
+    from deepvoice.metrics import eer
+
+    assert eer(dev["label"], s)[0] < 0.4

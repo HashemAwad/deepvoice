@@ -1,8 +1,6 @@
 rung,model,config,seed,dataset,split,eer,ci_low,ci_high,train_time,latency
 2,logreg:xlsr300m_L00,rung2_logreg_xlsr300m_L00_s0,0,asvspoof,train,0,0,0,0.363918,0.0010303
 2,logreg:xlsr300m_L00,rung2_logreg_xlsr300m_L00_s0,0,asvspoof,dev,0.00392465,7.46229e-05,0.00726303,0.363918,0.00100963
-2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,train,0,0,0,0.22185,0.000809959
-2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,dev,4.48511e-05,0,0.000161812,0.22185,0.00107332
 2,logreg:xlsr300m_L06,rung2_logreg_xlsr300m_L06_s0,0,asvspoof,train,0,0,0,0.232247,0.000830114
 2,logreg:xlsr300m_L06,rung2_logreg_xlsr300m_L06_s0,0,asvspoof,dev,8.97022e-05,0,0.000195618,0.232247,0.0010147
 2,logreg:xlsr300m_L09,rung2_logreg_xlsr300m_L09_s0,0,asvspoof,train,0,0,0,0.26385,0.000911715
@@ -17,3 +15,10 @@ rung,model,config,seed,dataset,split,eer,ci_low,ci_high,train_time,latency
 2,logreg:xlsr300m_L21,rung2_logreg_xlsr300m_L21_s0,0,asvspoof,dev,0.00103158,0,0.00193113,0.221179,0.000841972
 2,logreg:xlsr300m_L24,rung2_logreg_xlsr300m_L24_s0,0,asvspoof,train,0,0,0,0.23877,0.000833921
 2,logreg:xlsr300m_L24,rung2_logreg_xlsr300m_L24_s0,0,asvspoof,dev,0.000358809,5.37634e-05,0.000646545,0.23877,0.000848179
+2,mlp:xlsr300m_L03,rung2_mlp_xlsr300m_L03_s0,0,asvspoof,train,0,0,0,1.44212,0.000819916
+2,mlp:xlsr300m_L03,rung2_mlp_xlsr300m_L03_s0,0,asvspoof,dev,0.000392465,0,0.000809389,1.44212,0.000862879
+2,mlp:xlsr300m_L06,rung2_mlp_xlsr300m_L06_s0,0,asvspoof,train,0,0,0,1.41929,0.000815669
+2,mlp:xlsr300m_L06,rung2_mlp_xlsr300m_L06_s0,0,asvspoof,dev,0.000392465,3.3459e-05,0.000845471,1.41929,0.000820845
+2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,train,0,0,0,0.183529,0.000489871
+2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,dev,4.48511e-05,0,0.000161812,0.183529,0.000858839
+2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,eval,0.0236574,0.0152953,0.0305579,0.183529,0.000782135
