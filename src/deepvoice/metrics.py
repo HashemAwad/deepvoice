@@ -119,3 +119,36 @@ def error_at_threshold(labels, scores, threshold):
     far = float(np.mean(~fake[labels == 1]))
     frr = float(np.mean(fake[labels == 0]))
     return (far + frr) / 2
+
+
+def _logit(probs):
+    p = np.clip(np.asarray(probs, dtype=float), 1e-7, 1 - 1e-7)
+    return np.log(p / (1 - p))
+
+
+def fit_temperature(labels, probs):
+    """Temperature T > 0 that minimizes the log loss of sigmoid(logit(p) / T) on (labels, probs).
+    Fit it on dev; T > 1 softens over-confident probabilities."""
+    from scipy.optimize import minimize_scalar
+
+    labels, probs = _check(labels, probs, "probs")
+    z, y = _logit(probs), labels.astype(float)
+
+    def nll(log_t):
+        q = np.clip(1 / (1 + np.exp(-z / np.exp(log_t))), 1e-12, 1 - 1e-12)
+        return -np.mean(y * np.log(q) + (1 - y) * np.log(1 - q))
+
+    return float(np.exp(minimize_scalar(nll, bounds=(-5, 8), method="bounded").x))
+
+
+def apply_temperature(probs, t):
+    return 1 / (1 + np.exp(-_logit(probs) / t))
+
+
+def reliability(labels, probs, n_bins=15):
+    """Per equal-width bin: mean predicted P(fake), observed fake rate and clip count."""
+    labels, probs = _check(labels, probs, "probs")
+    bins = np.minimum((probs.astype(float) * n_bins).astype(int), n_bins - 1)
+    rows = [(probs[bins == b].mean(), labels[bins == b].mean(), int((bins == b).sum()))
+            for b in range(n_bins) if (bins == b).any()]
+    return pd.DataFrame(rows, columns=["mean_prob", "frac_fake", "count"])

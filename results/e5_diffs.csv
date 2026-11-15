@@ -9,3 +9,5 @@ rung 1 (original),itw clean,itw gain-12,itw,4.215,1.930,6.222
 rung 1 (original),itw clean,itw gain+6,itw,-0.516,-2.044,0.409
 augmented minus original,original on itw,augmented on itw,itw,8.439,1.615,16.544
 augmented minus original,original on itw trim,augmented on itw trim,itw,8.596,1.358,17.070
+rung 2 (XLS-R),eval clean,eval trim,eval,14.558,13.269,16.018
+rung 2 (XLS-R),itw clean,itw trim,itw,-6.678,-10.661,-3.335

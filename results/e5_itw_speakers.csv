@@ -1,0 +1,55 @@
+speaker,n,fake_share,eer
+Scarlett Johansson,73,0.5753,0.0000
+Kanye West,154,0.5130,0.0462
+Kamala Harris,29,0.1379,0.0800
+Billie Eilish,14,0.3571,0.1000
+Dave Chappelle,22,0.4091,0.1111
+Bernie Sanders,2877,0.4359,0.1192
+Adam Driver,217,0.6313,0.1241
+Jerry Seinfeld,51,0.8431,0.1250
+Nelson Mandela,381,0.7454,0.1706
+Mark Zuckerberg,582,0.4485,0.1963
+Malcolm X,176,0.2614,0.2174
+Tucker Carlson,100,0.6700,0.2424
+Jeff Goldblum,60,0.0667,0.2500
+Gilbert Gottfried,208,0.6106,0.2605
+Calvin Coolidge,73,0.2055,0.2667
+Christopher Hitchens,1339,0.4040,0.2932
+Lyndon Johnson,107,0.1121,0.3271
+Mitch Hedberg,31,0.9032,0.3294
+Richard Nixon,359,0.3510,0.3305
+Bill Clinton,1832,0.3837,0.3416
+Dwight Eisenhower,268,0.2351,0.3610
+Queen Elizabeth II,464,0.7737,0.3621
+Nick Offerman,169,0.0651,0.3636
+Bob Ross,108,0.4444,0.3928
+Donald Trump,3423,0.0453,0.4516
+Louis Farrakhan,410,0.2634,0.4650
+Alexandria Ocasio-Cortez,390,0.2564,0.4700
+Boris Johnson,295,0.2915,0.4814
+2Pac,160,0.6312,0.4825
+Orson Welles,202,0.8713,0.5057
+George Carlin,248,0.3387,0.5260
+Milton Friedman,589,0.5093,0.5303
+Alec Guinness,3625,0.4739,0.5522
+Bill Burr,201,0.2836,0.5592
+FDR,471,0.3461,0.5617
+William F. Buckley,26,0.8462,0.5641
+Louis C.K.,66,0.8636,0.5876
+The Notorious B.I.G.,329,0.9574,0.5906
+Ronald Reagan,1536,0.5964,0.6165
+Arnold Schwarzenegger,351,0.3077,0.6255
+Robert Kardashian,143,0.2797,0.6372
+Ayn Rand,2493,0.4428,0.6627
+Norm MacDonald,129,0.7209,0.6752
+John Cleese,129,0.5426,0.7611
+Alan Watts,378,0.7725,0.7773
+Barack Obama,3636,0.0919,0.7814
+Winston Churchill,882,0.2914,0.8327
+Mr. Rogers,130,0.7385,0.8529
+Martin Luther King,799,0.3542,0.8605
+Jimmy Carter,27,0.4074,0.8750
+George W. Bush,230,0.7609,0.9087
+Harry Truman,63,0.2540,0.9273
+JFK,669,0.4081,0.9414
+Frank Sinatra,55,0.6909,0.9737

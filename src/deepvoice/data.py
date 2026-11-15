@@ -92,3 +92,15 @@ def summarize(df):
             }
         )
     return pd.DataFrame(rows)
+
+
+def load_gender(root="data/LA"):
+    """{speaker: "female"/"male"} from the ASV enrollment protocols (<split>.<sex>.trn.txt).
+    The CM protocols carry no gender; speakers without ASV enrollment are absent."""
+    out = {}
+    for f in sorted(Path(root, "ASVspoof2019_LA_asv_protocols").glob("*male.trn.txt")):
+        sex = "female" if ".female." in f.name else "male"
+        for line in f.read_text().splitlines():
+            if line.strip():
+                out[line.split()[0]] = sex
+    return out

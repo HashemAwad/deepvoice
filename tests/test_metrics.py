@@ -119,3 +119,27 @@ def test_paired_bootstrap_diff():
     assert d > 0 and 0 < lo <= d <= hi  # worse scores raise EER, CI excludes 0
     d0, lo0, hi0 = paired_speaker_bootstrap_diff(y, good, good, spk, n_boot=50)
     assert d0 == 0 and lo0 == 0 and hi0 == 0
+
+
+def test_temperature_softens_overconfidence():
+    from deepvoice.metrics import apply_temperature, fit_temperature, reliability
+
+    rng = np.random.default_rng(7)
+    p_true = rng.uniform(0.05, 0.95, 20000)
+    y = (rng.random(20000) < p_true).astype(int)
+    overconfident = apply_temperature(p_true, 0.3)  # sharpened: too sure
+    t = fit_temperature(y, overconfident)
+    assert 3.0 < t < 3.7  # sharpening by 1/0.3 is undone by T = 1/0.3
+    assert ece(y, apply_temperature(overconfident, t)) < ece(y, overconfident)
+    r = reliability(y, p_true)
+    assert r["count"].sum() == 20000 and (abs(r.mean_prob - r.frac_fake) < 0.05).all()
+
+
+def test_load_gender(tmp_path):
+    from deepvoice.data import load_gender
+
+    d = tmp_path / "ASVspoof2019_LA_asv_protocols"
+    d.mkdir()
+    (d / "ASVspoof2019.LA.asv.eval.female.trn.txt").write_text("LA_0001 a,b\n")
+    (d / "ASVspoof2019.LA.asv.eval.male.trn.txt").write_text("LA_0002 c\n")
+    assert load_gender(tmp_path) == {"LA_0001": "female", "LA_0002": "male"}

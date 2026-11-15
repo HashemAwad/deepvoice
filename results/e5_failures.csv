@@ -1,0 +1,41 @@
+rung,dataset,factor,bucket,n,eer
+1,eval,duration (s),"(0, 2]",16633,0.1012
+1,eval,duration (s),"(2, 3]",23115,0.1702
+1,eval,duration (s),"(3, 4]",15644,0.1672
+1,eval,duration (s),"(4, 6]",12275,0.1386
+1,eval,duration (s),"(6, 100]",3570,0.1497
+1,eval,silence ratio,"(-0.01, 0.2]",34100,0.2222
+1,eval,silence ratio,"(0.2, 0.35]",15909,0.1389
+1,eval,silence ratio,"(0.35, 0.5]",10563,0.2622
+1,eval,silence ratio,"(0.5, 1.0]",10665,0.3212
+1,itw,duration (s),"(0, 2]",7089,0.7949
+1,itw,duration (s),"(2, 3]",7128,0.7960
+1,itw,duration (s),"(3, 4]",5170,0.7666
+1,itw,duration (s),"(4, 6]",6116,0.7605
+1,itw,duration (s),"(6, 100]",6276,0.7324
+1,itw,silence ratio,"(-0.01, 0.2]",20694,0.7899
+1,itw,silence ratio,"(0.2, 0.35]",8893,0.7498
+1,itw,silence ratio,"(0.35, 0.5]",1875,0.8012
+1,itw,silence ratio,"(0.5, 1.0]",317,0.8243
+1,eval,gender,female,48168,0.1403
+1,eval,gender,male,21084,0.1597
+2,eval,duration (s),"(0, 2]",16633,0.0311
+2,eval,duration (s),"(2, 3]",23115,0.0279
+2,eval,duration (s),"(3, 4]",15644,0.0231
+2,eval,duration (s),"(4, 6]",12275,0.0206
+2,eval,duration (s),"(6, 100]",3570,0.0144
+2,eval,silence ratio,"(-0.01, 0.2]",34100,0.1149
+2,eval,silence ratio,"(0.2, 0.35]",15909,0.0433
+2,eval,silence ratio,"(0.35, 0.5]",10563,0.0211
+2,eval,silence ratio,"(0.5, 1.0]",10665,0.0240
+2,itw,duration (s),"(0, 2]",7089,0.5086
+2,itw,duration (s),"(2, 3]",7128,0.4632
+2,itw,duration (s),"(3, 4]",5170,0.4112
+2,itw,duration (s),"(4, 6]",6116,0.3801
+2,itw,duration (s),"(6, 100]",6276,0.3350
+2,itw,silence ratio,"(-0.01, 0.2]",20694,0.4122
+2,itw,silence ratio,"(0.2, 0.35]",8893,0.4162
+2,itw,silence ratio,"(0.35, 0.5]",1875,0.5342
+2,itw,silence ratio,"(0.5, 1.0]",317,0.5612
+2,eval,gender,female,48168,0.0304
+2,eval,gender,male,21084,0.0151
