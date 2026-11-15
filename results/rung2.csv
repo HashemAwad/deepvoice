@@ -19,6 +19,7 @@ rung,model,config,seed,dataset,split,eer,ci_low,ci_high,train_time,latency
 2,mlp:xlsr300m_L03,rung2_mlp_xlsr300m_L03_s0,0,asvspoof,dev,0.000392465,0,0.000809389,1.44212,0.000862879
 2,mlp:xlsr300m_L06,rung2_mlp_xlsr300m_L06_s0,0,asvspoof,train,0,0,0,1.41929,0.000815669
 2,mlp:xlsr300m_L06,rung2_mlp_xlsr300m_L06_s0,0,asvspoof,dev,0.000392465,3.3459e-05,0.000845471,1.41929,0.000820845
-2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,train,0,0,0,0.183529,0.000489871
-2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,dev,4.48511e-05,0,0.000161812,0.183529,0.000858839
-2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,eval,0.0236574,0.0152953,0.0305579,0.183529,0.000782135
+2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,train,0,0,0,0.324495,0.0012306
+2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,dev,4.48511e-05,0,0.000161812,0.324495,0.00120175
+2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,eval,0.0236574,0.0152953,0.0305579,0.324495,0.00142071
+2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,itw,itw,0.422511,0.336203,0.527949,0.324495,0.00109094

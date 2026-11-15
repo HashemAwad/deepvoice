@@ -94,3 +94,14 @@ def test_per_attack_eer():
     a = ["bonafide", "bonafide", "A01", "A01", "A02", "A02"]
     out = per_attack_eer(y, s, a)
     assert set(out) == {"A01", "A02"} and out["A01"] == 0.0 and out["A02"] >= 0.5
+
+
+def test_error_at_threshold_and_eer_threshold_agree():
+    from deepvoice.metrics import error_at_threshold
+
+    y = [0, 0, 0, 0, 1, 1, 1, 1]
+    s = [0.1, 0.2, 0.3, 0.6, 0.4, 0.5, 0.7, 0.8]
+    value, thr = eer(y, s)
+    assert error_at_threshold(y, s, thr) == pytest.approx(value)
+    assert error_at_threshold(y, s, 0.0) == pytest.approx(0.5)  # everything called fake
+    assert error_at_threshold(y, s, 0.65) == pytest.approx((0.5 + 0.0) / 2)

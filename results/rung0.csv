@@ -2,6 +2,7 @@ rung,model,config,seed,dataset,split,eer,ci_low,ci_high,train_time,latency
 0,logreg,rung0_logreg_s0,0,asvspoof,train,0.351754,0.322564,0.379765,0.0153407,1.55355e-05
 0,logreg,rung0_logreg_s0,0,asvspoof,dev,0.303956,0.26984,0.329916,0.0153407,1.91143e-05
 0,logreg,rung0_logreg_s0,0,asvspoof,eval,0.181397,0.171297,0.190922,0.0153407,2.41471e-05
-0,tree,rung0_tree_s0,0,asvspoof,train,0.25622,0.217822,0.28654,0.0167833,1.40908e-05
-0,tree,rung0_tree_s0,0,asvspoof,dev,0.279758,0.247404,0.30987,0.0167833,1.43697e-05
-0,tree,rung0_tree_s0,0,asvspoof,eval,0.190648,0.18591,0.194866,0.0167833,1.38347e-05
+0,tree,rung0_tree_s0,0,asvspoof,train,0.25622,0.217822,0.28654,0.0311505,1.42353e-05
+0,tree,rung0_tree_s0,0,asvspoof,dev,0.279758,0.247404,0.30987,0.0311505,3.6268e-05
+0,tree,rung0_tree_s0,0,asvspoof,eval,0.190648,0.18591,0.194866,0.0311505,1.40119e-05
+0,tree,rung0_tree_s0,0,itw,itw,0.37637,0.313837,0.424424,0.0311505,2.32124e-05

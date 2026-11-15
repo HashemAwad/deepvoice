@@ -130,14 +130,20 @@ SILENCE = ["lead_sil", "trail_sil", "sil_ratio", "duration", "energy_mean", "ene
 
 def load_xy(split, groups=("lfcc",), n_coef=20, deltas=2, stats=("mean", "std"),
             root="data"):
-    """One modelling table for an ASVspoof split: file, label, speaker, attack + feature columns.
+    """One modelling table: file, label, speaker, attack + feature columns.
 
-    Groups follow the plan: "silence" (S), "mfcc" (M), "lfcc" (L), "spec" (P). Cepstral groups
-    use `n_coef`, `deltas` and `stats`; the spectral group uses `stats`; silence uses all 9
-    columns. Feature columns are every column after the first four.
+    `split` is "train", "dev" or "eval" (ASVspoof) or "itw" (In-the-Wild, read from
+    <root>/release_in_the_wild/meta.csv). Groups follow the plan: "silence" (S), "mfcc" (M),
+    "lfcc" (L), "spec" (P). Cepstral groups use `n_coef`, `deltas` and `stats`; the spectral group
+    uses `stats`; silence uses all 9 columns. Feature columns are every column after the first four.
     """
     root = Path(root)
-    p = pd.read_parquet(root / "protocols.parquet")
+    if split == "itw":
+        from deepvoice.data import load_itw
+
+        p = load_itw(root / "release_in_the_wild")
+    else:
+        p = pd.read_parquet(root / "protocols.parquet")
     out = p[p["split"] == split][["file", "label", "speaker", "attack"]].reset_index(drop=True)
     parts = [out]
     for g in groups:

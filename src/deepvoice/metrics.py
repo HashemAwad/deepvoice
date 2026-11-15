@@ -88,3 +88,14 @@ def per_attack_eer(labels, scores, attacks):
     real = labels == 0
     return {a: eer(labels[real | (attacks == a)], scores[real | (attacks == a)])[0]
             for a in sorted(set(attacks[labels == 1]))}
+
+
+def error_at_threshold(labels, scores, threshold):
+    """Average of the false-accept rate (fakes scored below `threshold`, i.e. let through) and
+    the false-reject rate (real clips scored >= `threshold`, i.e. flagged). A clip is called fake
+    when score >= threshold, as in `eer`."""
+    labels, scores = _check(labels, scores, "scores")
+    fake = scores.astype(float) >= threshold
+    far = float(np.mean(~fake[labels == 1]))
+    frr = float(np.mean(fake[labels == 0]))
+    return (far + frr) / 2

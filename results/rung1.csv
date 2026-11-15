@@ -7,6 +7,7 @@ rung,model,config,seed,dataset,split,eer,ci_low,ci_high,train_time,latency
 1,logreg:lfcc20_dd_meanstd,rung1_logreg_lfcc20_dd_meanstd_s0,0,asvspoof,dev,0.0200484,0.00909895,0.0320313,0.0332446,0.000103752
 1,rf:lfcc20_dd_meanstd,rung1_rf_lfcc20_dd_meanstd_s0,0,asvspoof,train,0,0,0,4.94639,0.00243502
 1,rf:lfcc20_dd_meanstd,rung1_rf_lfcc20_dd_meanstd_s0,0,asvspoof,dev,0.0137026,0.00466542,0.0238152,4.94639,0.00256092
-1,hgb:lfcc40dd_e3devsel,rung1_hgb_lfcc40dd_e3devsel_s0,0,asvspoof,train,0,0,0,13.399,0.00164473
-1,hgb:lfcc40dd_e3devsel,rung1_hgb_lfcc40dd_e3devsel_s0,0,asvspoof,dev,0.00134553,0.000402488,0.0025138,13.399,0.00148607
-1,hgb:lfcc40dd_e3devsel,rung1_hgb_lfcc40dd_e3devsel_s0,0,asvspoof,eval,0.140979,0.128031,0.155212,13.399,0.00149746
+1,hgb:lfcc40dd_e3devsel,rung1_hgb_lfcc40dd_e3devsel_s0,0,asvspoof,train,0,0,0,27.7636,0.00182477
+1,hgb:lfcc40dd_e3devsel,rung1_hgb_lfcc40dd_e3devsel_s0,0,asvspoof,dev,0.00134553,0.000402488,0.0025138,27.7636,0.0241827
+1,hgb:lfcc40dd_e3devsel,rung1_hgb_lfcc40dd_e3devsel_s0,0,asvspoof,eval,0.140979,0.128031,0.155212,27.7636,0.0226527
+1,hgb:lfcc40dd_e3devsel,rung1_hgb_lfcc40dd_e3devsel_s0,0,itw,itw,0.775897,0.673218,0.857339,27.7636,0.05687
