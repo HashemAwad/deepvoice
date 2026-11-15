@@ -46,3 +46,13 @@ def test_silence_table_caches(tmp_path):
     first = silence_table(df, cache, n_jobs=1)
     p.unlink()  # a second call must read the cache, not the audio
     assert silence_table(df, cache, n_jobs=1).equals(first)
+
+
+def test_trim_cuts_leading_and_trailing_silence():
+    from deepvoice.silence import trim
+
+    y = _clip(lead=0.5, speech=1.0, trail=0.25)
+    t = trim(y)
+    assert len(t) / 16000 == pytest.approx(1.0, abs=0.04)
+    f = silence_features(t)
+    assert f["lead_sil"] < 0.02 and f["trail_sil"] < 0.02

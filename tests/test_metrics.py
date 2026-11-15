@@ -105,3 +105,17 @@ def test_error_at_threshold_and_eer_threshold_agree():
     assert error_at_threshold(y, s, thr) == pytest.approx(value)
     assert error_at_threshold(y, s, 0.0) == pytest.approx(0.5)  # everything called fake
     assert error_at_threshold(y, s, 0.65) == pytest.approx((0.5 + 0.0) / 2)
+
+
+def test_paired_bootstrap_diff():
+    from deepvoice.metrics import paired_speaker_bootstrap_diff
+
+    rng = np.random.default_rng(6)
+    y = rng.integers(0, 2, 3000)
+    good = y + rng.normal(0, 0.5, 3000)
+    worse = y + rng.normal(0, 1.5, 3000)
+    spk = rng.integers(0, 30, 3000)
+    d, lo, hi = paired_speaker_bootstrap_diff(y, good, worse, spk, n_boot=200)
+    assert d > 0 and 0 < lo <= d <= hi  # worse scores raise EER, CI excludes 0
+    d0, lo0, hi0 = paired_speaker_bootstrap_diff(y, good, good, spk, n_boot=50)
+    assert d0 == 0 and lo0 == 0 and hi0 == 0

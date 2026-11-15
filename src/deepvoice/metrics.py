@@ -64,6 +64,26 @@ def speaker_bootstrap_eer(labels, scores, speakers, n_boot=1000, alpha=0.05, see
     return eer(labels, scores)[0], float(lo), float(hi)
 
 
+def paired_speaker_bootstrap_diff(labels, scores_a, scores_b, speakers, n_boot=1000, alpha=0.05,
+                                  seed=0):
+    """EER(b) - EER(a) on the same clips, with a paired speaker-clustered bootstrap CI: each
+    resample of whole speakers is scored with both a and b. Returns (diff, ci_low, ci_high)."""
+    labels, scores_a = _check(labels, scores_a, "scores_a")
+    _, scores_b = _check(labels, scores_b, "scores_b")
+    speakers = np.asarray(speakers)
+    groups = pd.Series(np.arange(len(labels))).groupby(speakers).indices
+    keys = list(groups)
+    rng = np.random.default_rng(seed)
+    vals = []
+    for _ in range(n_boot):
+        idx = np.concatenate([groups[keys[k]] for k in rng.integers(0, len(keys), len(keys))])
+        if labels[idx].min() == labels[idx].max():
+            continue
+        vals.append(eer(labels[idx], scores_b[idx])[0] - eer(labels[idx], scores_a[idx])[0])
+    lo, hi = np.quantile(vals, [alpha / 2, 1 - alpha / 2])
+    return eer(labels, scores_b)[0] - eer(labels, scores_a)[0], float(lo), float(hi)
+
+
 def ece(labels, probs, n_bins=15):
     """Expected calibration error of P(fake): gap between mean predicted P(fake) and the
     observed fake rate, averaged over equal-width probability bins."""

@@ -1,0 +1,11 @@
+model,A,B,clips,diff_pp,ci_low_pp,ci_high_pp
+rung 1 (original),eval clean,eval trim,eval,10.049,8.926,11.192
+rung 1 (original),eval clean,eval gain-12,eval,-0.183,-0.422,-0.014
+rung 1 (original),eval clean,eval gain+6,eval,0.382,0.088,0.705
+augmented minus original,original on eval,augmented on eval,eval,13.805,12.160,15.292
+augmented minus original,original on eval trim,augmented on eval trim,eval,1.547,0.589,2.352
+rung 1 (original),itw clean,itw trim,itw,-1.995,-3.648,-0.797
+rung 1 (original),itw clean,itw gain-12,itw,4.215,1.930,6.222
+rung 1 (original),itw clean,itw gain+6,itw,-0.516,-2.044,0.409
+augmented minus original,original on itw,augmented on itw,itw,8.439,1.615,16.544
+augmented minus original,original on itw trim,augmented on itw trim,itw,8.596,1.358,17.070

@@ -73,3 +73,27 @@ def test_load_xy_joins_groups_in_protocol_order(tmp_path):
     sil.iloc[::-1].to_parquet(tmp_path / "features" / "silence_dev.parquet")
     with pytest.raises(ValueError):
         load_xy("dev", groups=("silence",), root=tmp_path)
+
+
+def test_transforms():
+    from deepvoice.features import apply_transform
+
+    y = _tone(440)
+    assert np.abs(apply_transform(y, "gain-12")).max() == pytest.approx(0.3 * 10 ** (-12 / 20), rel=1e-3)
+    assert np.abs(apply_transform(y * 3, "gain+6")).max() <= 1.0
+    assert apply_transform(y, None) is y
+    with pytest.raises(ValueError):
+        apply_transform(y, "reverse")
+
+
+def test_augment_is_reproducible_and_changes_silence():
+    from deepvoice.features import apply_transform
+    from deepvoice.silence import silence_features
+
+    rng = np.random.default_rng(0)
+    y = np.concatenate([1e-4 * rng.standard_normal(16000), _tone(300), 1e-4 * rng.standard_normal(4000)]).astype(np.float32)
+    a, b = apply_transform(y, "augment", key="LA_T_1"), apply_transform(y, "augment", key="LA_T_1")
+    c = apply_transform(y, "augment", key="LA_T_2")
+    assert np.array_equal(a, b) and not np.array_equal(a, c)
+    assert np.abs(a).max() <= 1.0
+    assert silence_features(a)["lead_sil"] <= 1.05  # original 1 s lead replaced by 0-1 s padding

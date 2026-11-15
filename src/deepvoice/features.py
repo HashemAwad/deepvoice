@@ -87,15 +87,46 @@ def column_names(group):
     return [f"{r}_{s}" if group != "spec" else f"spec_{r}_{s}" for r in rows for s in STATS]
 
 
-def clip_features(path):
+def apply_transform(y, transform=None, key=None):
+    """Audio changes for E5. Test-time: None, "trim" (cut leading/trailing silence with the
+    group-S VAD), "gain-12" (12 dB quieter), "gain+6" (6 dB louder, clipped to +-1).
+    Training-time "augment": trim, then pad each end with 0-1 s of background noise at -80 to
+    -50 dBFS, then a random gain of -12 to +6 dB (clipped). Its randomness is seeded by `key`
+    (the clip id), so the augmented set is reproducible."""
+    if transform is None:
+        return y
+    if transform == "augment":
+        import zlib
+
+        from deepvoice.silence import trim
+
+        rng = np.random.default_rng(zlib.crc32(str(key).encode()))
+        y = trim(y)
+        pads = [rng.normal(0, 10 ** (rng.uniform(-80, -50) / 20), int(rng.uniform(0, 1) * SR))
+                for _ in range(2)]
+        y = np.concatenate([pads[0], y, pads[1]]) * 10 ** (rng.uniform(-12, 6) / 20)
+        return np.clip(y, -1, 1).astype(np.float32)
+    if transform == "trim":
+        from deepvoice.silence import trim
+
+        return trim(y)
+    if transform == "gain-12":
+        return (y * 10 ** (-12 / 20)).astype(np.float32)
+    if transform == "gain+6":
+        return np.clip(y * 10 ** (6 / 20), -1, 1).astype(np.float32)
+    raise ValueError(f"unknown transform {transform!r}")
+
+
+def clip_features(path, transform=None):
     """Pooled feature vectors {group: 1-D float32 array} for one audio file."""
-    f = frame_features(load_audio(path))
+    f = frame_features(apply_transform(load_audio(path), transform, key=Path(path).stem))
     return {g: _pool(f[g]).astype(np.float32) for g in GROUPS}
 
 
-def feature_tables(df, name, root="data/features", n_jobs=-1):
+def feature_tables(df, name, root="data/features", n_jobs=-1, transform=None):
     """{group: DataFrame(file + pooled columns)} for every row of `df`, cached as
-    <root>/<group>_<name>.parquet. Existing caches are loaded, never recomputed."""
+    <root>/<group>_<name>.parquet. Existing caches are loaded, never recomputed. `transform`
+    (see apply_transform) changes the audio first; give such a cache its own `name`."""
     root = Path(root)
     paths = {g: root / f"{g}_{name}.parquet" for g in GROUPS}
     if all(p.exists() for p in paths.values()):
@@ -105,7 +136,7 @@ def feature_tables(df, name, root="data/features", n_jobs=-1):
                 raise ValueError(f"{paths[g]} does not match the requested clips")
         return out
     t0 = time.time()
-    rows = Parallel(n_jobs=n_jobs, batch_size=32)(delayed(clip_features)(p) for p in df["path"])
+    rows = Parallel(n_jobs=n_jobs, batch_size=32)(delayed(clip_features)(p, transform) for p in df["path"])
     root.mkdir(parents=True, exist_ok=True)
     out = {}
     for g in GROUPS:
@@ -129,13 +160,14 @@ SILENCE = ["lead_sil", "trail_sil", "sil_ratio", "duration", "energy_mean", "ene
 
 
 def load_xy(split, groups=("lfcc",), n_coef=20, deltas=2, stats=("mean", "std"),
-            root="data"):
+            root="data", variant=None):
     """One modelling table: file, label, speaker, attack + feature columns.
 
     `split` is "train", "dev" or "eval" (ASVspoof) or "itw" (In-the-Wild, read from
     <root>/release_in_the_wild/meta.csv). Groups follow the plan: "silence" (S), "mfcc" (M),
     "lfcc" (L), "spec" (P). Cepstral groups use `n_coef`, `deltas` and `stats`; the spectral group
     uses `stats`; silence uses all 9 columns. Feature columns are every column after the first four.
+    `variant` (e.g. "trim") reads the features of transformed audio, <group>_<split>_<variant>.
     """
     root = Path(root)
     if split == "itw":
@@ -147,7 +179,7 @@ def load_xy(split, groups=("lfcc",), n_coef=20, deltas=2, stats=("mean", "std"),
     out = p[p["split"] == split][["file", "label", "speaker", "attack"]].reset_index(drop=True)
     parts = [out]
     for g in groups:
-        t = pd.read_parquet(root / "features" / f"{g}_{split}.parquet")
+        t = pd.read_parquet(root / "features" / f"{g}_{split}{'_' + variant if variant else ''}.parquet")
         if list(t["file"]) != list(out["file"]):
             raise ValueError(f"{g}_{split} rows do not match the protocol order")
         if g in ("mfcc", "lfcc"):

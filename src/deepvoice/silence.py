@@ -59,6 +59,15 @@ def silence_features(y, sr=SR):
     }
 
 
+def trim(y, sr=SR):
+    """Cut leading and trailing silence (same VAD rule as the features); keeps the speech span."""
+    e = frame_energy_db(y)
+    speech = e >= e.max() - REL_DB
+    first = int(np.argmax(speech))
+    last = len(speech) - 1 - int(np.argmax(speech[::-1]))
+    return y[first * HOP: min(len(y), last * HOP + FRAME)]
+
+
 def _one(path):
     return silence_features(load_audio(path))
 

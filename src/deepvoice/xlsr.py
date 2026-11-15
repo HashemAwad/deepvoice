@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from deepvoice.features import load_audio
+from deepvoice.features import apply_transform, load_audio
 
 MODEL = "facebook/wav2vec2-xls-r-300m"
 LAYERS = list(range(0, 25, 3))  # 0 = CNN feature projection output, 24 = last transformer layer
@@ -51,10 +51,10 @@ def embed_batch(model, waves, dev=None):
     return torch.stack(pooled, 1).half().cpu().numpy()
 
 
-def embed_paths(model, paths, batch_seconds=60.0):
+def embed_paths(model, paths, batch_seconds=60.0, transform=None):
     """Embeddings for many files. Clips are sorted by length and batched up to ~batch_seconds of
     audio per batch (less padding, fewer passes); output keeps the input order."""
-    waves = [load_audio(p) for p in paths]
+    waves = [apply_transform(load_audio(p), transform) for p in paths]
     order = np.argsort([len(w) for w in waves])
     out = np.zeros((len(waves), len(LAYERS), 1024), dtype=np.float16)
     batch = []
@@ -86,7 +86,7 @@ def cache_path(name, root="data/features"):
     return Path(root) / f"xlsr300m_{name}.npy"
 
 
-def extract_cached(df, name, root="data/features", chunk=2000, model=None):
+def extract_cached(df, name, root="data/features", chunk=2000, model=None, transform=None):
     """Embeddings for every row of `df` -> <root>/xlsr300m_<name>.npy (n, 9 layers, 1024), fp16,
     rows in `df` order, plus <name>_files.txt listing the clip ids. Work is saved per chunk in
     <root>/xlsr300m_<name>_parts/, so an interrupted run resumes where it stopped."""
@@ -106,7 +106,7 @@ def extract_cached(df, name, root="data/features", chunk=2000, model=None):
         if part.exists():
             continue
         model = model or load_model()
-        np.save(part, embed_paths(model, paths[c * chunk:(c + 1) * chunk]))
+        np.save(part, embed_paths(model, paths[c * chunk:(c + 1) * chunk], transform=transform))
         print(f"{name}: chunk {c + 1}/{n_chunks} done, {time.time() - t0:.0f}s", flush=True)
     emb = np.concatenate([np.load(parts / f"{c:04d}.npy") for c in range(n_chunks)])
     np.save(out, emb)
