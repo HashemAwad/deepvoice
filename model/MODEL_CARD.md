@@ -40,7 +40,7 @@ The first run downloads XLS-R-300M (1.27 GB) from Hugging Face.
 | In-the-Wild (real-world audio) | **42.3%** [33.6, 52.8] | close to chance (50%) |
 | In-the-Wild at the dev threshold | 47.4% error | the threshold does not transfer |
 
-Cost: about 45 ms per clip for XLS-R on an Apple M5 GPU, under 0.01 ms for the classifier.
+Cost: about 43-45 ms per clip for XLS-R on an Apple M5 GPU, under 0.01 ms for the classifier.
 
 ## Limitations (please read)
 
