@@ -45,3 +45,10 @@ def test_mlp_builds_and_learns():
     from deepvoice.metrics import eer
 
     assert eer(dev["label"], s)[0] < 0.4
+
+
+def test_predict_cli_without_files_prints_usage(capsys):
+    from deepvoice.predict import main
+
+    assert main([]) == 2
+    assert "python -m deepvoice.predict" in capsys.readouterr().out

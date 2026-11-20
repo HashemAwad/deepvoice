@@ -1,0 +1,27 @@
+{
+  "name": "DeepVoice rung 2",
+  "xlsr_model": "facebook/wav2vec2-xls-r-300m",
+  "layer": 3,
+  "pooling": "mean over time",
+  "classifier": "StandardScaler + LogisticRegression(C=1, class_weight=balanced)",
+  "train_data": "ASVspoof 2019 LA train (25,380 clips, 16 kHz mono)",
+  "seed": 0,
+  "threshold": 0.5279752016067505,
+  "threshold_rule": "EER threshold on ASVspoof 2019 LA dev",
+  "eer": {
+    "dev": 4.5e-05,
+    "eval": 0.023657,
+    "itw": 0.422511
+  },
+  "eer_ci95": {
+    "eval": [
+      0.015295,
+      0.030558
+    ],
+    "itw": [
+      0.336203,
+      0.527949
+    ]
+  },
+  "sha256": "701d346a109541bd13999e7f8e8ca1b4d497f8026dca3e365fca04800d34cbbc"
+}
