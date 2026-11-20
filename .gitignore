@@ -27,3 +27,6 @@ wandb/
 Thumbs.db
 .vscode/
 .idea/
+
+# final report: submitted on Moodle, kept out of git
+/docs/final_report/

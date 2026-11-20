@@ -5,7 +5,7 @@
 and measure how they generalize to unseen attacks and to In-the-Wild; we test for shortcuts
 (silence, loudness), calibration, and whether the pretrained model is worth its cost.
 
-> Status: Tier 1 complete (E1-E5). Final report: [`docs/final_report/final_report.pdf`](docs/final_report/final_report.pdf).
+> Status: Tier 1 complete (E1-E5). The final report was submitted on Moodle.
 > Single notebook: [`notebooks/DeepVoice_final.ipynb`](notebooks/DeepVoice_final.ipynb). Final model and card: [`model/`](model/).
 
 ## Results in one table
@@ -68,7 +68,7 @@ tests/           pytest; every metric/parser gets a small test
 scripts/         setup.sh (macOS/Linux), setup.ps1 (Windows), download_data.sh
 notebooks/       00_audit ... 06_cost_and_final_model, and DeepVoice_final.ipynb (all of them
                  in one notebook); analysis only, real code lives in src/ (nbstripout enabled)
-docs/            PLAN.pdf, progress report, final report, executed final notebook
+docs/            PLAN.pdf, progress report, executed final notebook
 results/         one CSV per experiment + small figures (committed); configs/ = one JSON per run
 CLAUDE.md        working rules for the team and for Claude Code
 model/           final model (29 KB classifier + metadata) and MODEL_CARD.md; XLS-R itself is

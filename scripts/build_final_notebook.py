@@ -27,7 +27,7 @@ PARTS = [
 INTRO = """# DeepVoice: Do Fake-Voice Detectors Learn Fakeness, or Just the Dataset?
 
 **CMPS 261 Introduction to Machine Learning, AUB, Fall 2026.** Hashem Awad, Ahmed Faleh, Ali Sleiman.
-Report: `docs/final_report/final_report.pdf`. Code: https://github.com/HashemAwad/deepvoice
+Report: submitted on Moodle. Code: https://github.com/HashemAwad/deepvoice
 
 **Question.** What do fake-voice detectors learn, and how much of their performance survives when the
 data change? We train a ladder of detectors on ASVspoof 2019 LA (rung 0: silence/duration only;
