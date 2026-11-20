@@ -6,7 +6,7 @@ and measure how they generalize to unseen attacks and to In-the-Wild; we test fo
 (silence, loudness), calibration, and whether the pretrained model is worth its cost.
 
 > Status: Tier 1 complete (E1-E5). The final report was submitted on Moodle.
-> Single notebook: [`notebooks/DeepVoice_final.ipynb`](notebooks/DeepVoice_final.ipynb). Final model and card: [`model/`](model/).
+> Single notebook: [`docs/code_deliverable/DeepVoice_final.ipynb`](docs/code_deliverable/DeepVoice_final.ipynb) (executed, with outputs; source: `notebooks/DeepVoice_final.ipynb`). Final model and card: [`model/`](model/).
 
 ## Results in one table
 
@@ -25,6 +25,16 @@ rule (every rung is near 50% error at its dev threshold on In-the-Wild, but alre
 at the best threshold that the pre-registered gap is not reached). Details: `results/e4_hypotheses.csv`,
 `results/e5_diffs.csv`, `results/cost_table.csv`.
 
+**Disclosure (rung 2 layer choice).** Layers 3 and 6 were tied on dev (0.00% vs 0.01% EER,
+inside each other's CI) and also tied exactly on speaker-grouped CV. An early version of the
+tie-break then fell back on row order; in a final re-run it picked layer 6 and scored it on eval once
+(0.34% EER, kept in `results/rung2.csv`). The tie-break now falls back on the lower dev EER and
+selects layer 3 (eval 2.37%), the model reported everywhere; the layer-6 number is disclosed, not used.
+
+**Limitations.** One seed (0) per model; Tier 2 (fine-tuning XLS-R, more seeds, E6+) was not run.
+The augmentation mitigation (E5) did not help the classical model and was not tried on rung 2;
+recalibrating thresholds on target-domain data is future work.
+
 ## Reproduce everything
 
 ```bash
@@ -35,7 +45,10 @@ uv run jupyter nbconvert --to notebook --execute notebooks/DeepVoice_final.ipynb
 ```
 
 Every table and figure in `results/` is written by a notebook cell (seed 0, a config JSON per run in
-`results/configs/`). Score your own audio with the final model:
+`results/configs/`); the hypothesis verdicts are computed in notebook 04 (`results/e4_hypotheses.csv`:
+H1a, H2, H3, H4) and notebook 05 (H1b). The executed notebook with all outputs is
+[`docs/code_deliverable/DeepVoice_final.ipynb`](docs/code_deliverable/DeepVoice_final.ipynb) (also as
+`.html`); its appendix reproduces all of `src/deepvoice/`. Score your own audio with the final model:
 `uv run --extra dl python -m deepvoice.predict clip.wav` (read `model/MODEL_CARD.md` first).
 
 ## Setup

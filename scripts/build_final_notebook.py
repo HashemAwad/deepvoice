@@ -42,7 +42,19 @@ features computed once and cached; seed 0 and a config file for every run.
 **How to run.** `./scripts/setup.sh --dl`, `./scripts/download_data.sh` (about 16 GB), then
 `uv run --extra dl python -m deepvoice.pipeline` (builds all caches; about 3 h from scratch, seconds
 when cached), then run this notebook top to bottom. Each section below is one of the repository's
-notebooks 00-06, unchanged; reusable code lives in `src/deepvoice/`."""
+notebooks 00-06, unchanged. The reusable code they import (audio loader, features, XLS-R embedding,
+metrics, models, final-model CLI) lives in `src/deepvoice/` and is reproduced in full in the
+**Appendix** at the end of this notebook."""
+
+APPENDIX = """---
+# Appendix: source code of `src/deepvoice/`
+
+The cells above import these modules. They are reproduced here verbatim (generated from the
+repository by `scripts/build_final_notebook.py`), so this notebook contains all the code used:
+data loading and cleaning (`data.py`), the shared 16 kHz mono audio loader and feature extraction
+(`features.py`, `silence.py`), the frozen XLS-R embeddings (`xlsr.py`), metrics with bootstrap CIs
+and calibration (`metrics.py`), models, tuning and model selection (`models.py`), the cache pipeline
+(`pipeline.py`) and the final-model scorer (`predict.py`)."""
 
 
 def main():
@@ -58,6 +70,9 @@ def main():
                 cells.append(code(c.source))
             else:
                 cells.append(md("#" + c.source if c.source.startswith("# ") else c.source))
+    cells.append(md(APPENDIX))
+    for f in sorted((ROOT / "src" / "deepvoice").glob("*.py")):
+        cells.append(md(f"### `src/deepvoice/{f.name}`\n\n```python\n{f.read_text().rstrip()}\n```"))
     nb = nbf.v4.new_notebook(cells=cells, metadata={"kernelspec": {
         "display_name": "Python 3", "language": "python", "name": "python3"}})
     nbf.write(nb, ROOT / "notebooks" / "DeepVoice_final.ipynb")

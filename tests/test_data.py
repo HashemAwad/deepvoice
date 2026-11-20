@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from deepvoice.data import SPLITS, load_protocols, read_protocol, summarize
@@ -32,7 +34,7 @@ def test_load_protocols_and_summarize(tmp_path):
     (proto_dir / SPLITS["dev"][1]).write_text("LA_0069 LA_D_1 - - bonafide\nLA_0069 LA_D_2 - A03 spoof\n")
     df = load_protocols(tmp_path, splits=("train", "dev"))
     assert list(df.columns) == ["file", "speaker", "attack", "label", "split", "path"]
-    assert df["path"].iloc[0].endswith("ASVspoof2019_LA_train/flac/LA_T_1138215.flac")
+    assert Path(df["path"].iloc[0]).as_posix().endswith("ASVspoof2019_LA_train/flac/LA_T_1138215.flac")
     s = summarize(df).set_index("split")
     assert s.loc["train", ["real", "fake", "total", "speakers"]].tolist() == [2, 2, 4, 2]
     assert s.loc["train", "attacks"] == "A01-A02 (2)"
@@ -46,4 +48,4 @@ def test_load_itw(tmp_path):
     df = load_itw(tmp_path)
     assert list(df["file"]) == ["0", "1"] and list(df["label"]) == [1, 0]
     assert list(df["attack"]) == ["unknown", "bonafide"] and set(df["split"]) == {"itw"}
-    assert df["path"].iloc[0].endswith("0.wav")
+    assert Path(df["path"].iloc[0]).as_posix().endswith("0.wav")

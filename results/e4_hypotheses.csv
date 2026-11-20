@@ -1,3 +1,6 @@
 hypothesis,evidence,verdict
+H1a,"rung 0 eval EER 19.1% (true < 25%, false >= 35%)",true
+H2,rung 1 worst unseen attack A18 38.14% vs repeated mean 0.22% (170x; rule >= 2x),true
+H3 (in-distribution),rung 1 minus rung 2 eval EER: 11.7 pp (rule >= 5 pp),true
 H3 (ITW part),"rung2-rung1 margin: eval 11.7 pp, ITW 35.3 pp, shrink -23.6 pp",no shrinkage of >= 10 pp (not decidable as shrinking)
 H4,"ITW error at dev threshold minus ITW EER: rung 0: 12.4 pp, rung 1: -27.1 pp, rung 2: 5.1 pp",false
