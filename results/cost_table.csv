@@ -1,4 +1,4 @@
 rung,model,extract_ms_per_clip,extract_device,train_s,score_ms_per_clip,model_kb,trainable_params_or_nodes,frozen_params,eval_eer_pct,itw_eer_pct
-0,"depth-3 tree, 4 silence/duration numbers",0.8272,1 CPU core,0.03115,1.401e-05,2.462,15,0,19.06,37.64
-1,"gradient boosting, LFCC-40 + deltas (240)",3.515,1 CPU core,27.76,0.02265,897.8,5996,0,14.1,77.59
-2,frozen XLS-R-300M layer 3 + logistic regression,45.16,mps (GPU),0.3245,0.001421,29.36,1025,315438720,2.366,42.25
+0,"depth-3 tree, 4 silence/duration numbers",0.7568,1 CPU core,0.01345,1.158e-05,2.462,15,0,19.06,37.64
+1,"gradient boosting, LFCC-40 + deltas (240)",3.654,1 CPU core,12.49,0.001149,897.8,5996,0,14.1,77.59
+2,frozen XLS-R-300M layer 3 + logistic regression,42.82,mps (GPU),0.1627,0.0008348,29.36,1025,315438720,2.366,42.25

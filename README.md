@@ -5,7 +5,38 @@
 and measure how they generalize to unseen attacks and to In-the-Wild; we test for shortcuts
 (silence, loudness), calibration, and whether the pretrained model is worth its cost.
 
-> Status: Tier 1 in progress. `hypotheses.md` is **frozen** (hash below); eval and In-the-Wild may now be used.
+> Status: Tier 1 complete (E1-E5). Final report: [`docs/final_report/final_report.pdf`](docs/final_report/final_report.pdf).
+> Single notebook: [`notebooks/DeepVoice_final.ipynb`](notebooks/DeepVoice_final.ipynb). Final model and card: [`model/`](model/).
+
+## Results in one table
+
+EER (%) with speaker-clustered bootstrap 95% CI. Models fit on ASVspoof train, chosen on dev, scored
+once on eval and In-the-Wild after the hypotheses were frozen.
+
+| Rung | Final model | Dev | ASVspoof eval | eval, silence trimmed | In-the-Wild |
+|---|---|---|---|---|---|
+| 0 | depth-3 tree on 4 silence/duration numbers | 28.0 | 19.1 [18.6, 19.5] | (not run) | 37.6 [31.4, 42.4] |
+| 1 | gradient boosting on LFCC-40 + deltas (tuned) | 0.13 | 14.1 [12.8, 15.5] | 24.2 | 77.6 [67.3, 85.7] |
+| 2 | frozen XLS-R-300M layer 3 + logistic regression | 0.00 | **2.4** [1.5, 3.1] | 16.9 | 42.3 [33.6, 52.8] |
+
+Hypotheses (rules frozen in `hypotheses.md`): H1a and H1b (silence shortcut) supported; H2 (unseen
+attacks harder) rule met; H3 supported in-distribution, not supported on In-the-Wild; H4 false by its
+rule (every rung is near 50% error at its dev threshold on In-the-Wild, but already so close to chance
+at the best threshold that the pre-registered gap is not reached). Details: `results/e4_hypotheses.csv`,
+`results/e5_diffs.csv`, `results/cost_table.csv`.
+
+## Reproduce everything
+
+```bash
+./scripts/setup.sh --dl                         # uv, Python 3.12, locked packages, tests
+./scripts/download_data.sh                      # ASVspoof 2019 LA + In-the-Wild (~16 GB)
+uv run --extra dl python -m deepvoice.pipeline  # all feature caches (~3 h from scratch on an M5)
+uv run jupyter nbconvert --to notebook --execute notebooks/DeepVoice_final.ipynb --output-dir out
+```
+
+Every table and figure in `results/` is written by a notebook cell (seed 0, a config JSON per run in
+`results/configs/`). Score your own audio with the final model:
+`uv run --extra dl python -m deepvoice.predict clip.wav` (read `model/MODEL_CARD.md` first).
 
 ## Setup
 
@@ -30,16 +61,18 @@ dependencies, enables notebook output stripping, and runs the tests.
 ## Layout
 
 ```
-src/deepvoice/   data.py (protocols), metrics.py (EER, bootstrap CI, ECE), features.py,
-                 silence.py, xlsr.py, models.py
+src/deepvoice/   data.py (protocols, ITW, gender), metrics.py (EER, bootstrap CIs, ECE,
+                 calibration), features.py, silence.py, xlsr.py, models.py, pipeline.py (builds
+                 every cache), predict.py (final-model CLI)
 tests/           pytest; every metric/parser gets a small test
 scripts/         setup.sh (macOS/Linux), setup.ps1 (Windows), download_data.sh
-notebooks/       00_audit ... 05_shortcuts_calibration; analysis only, real code lives in src/
-                 (setup script enables nbstripout)
+notebooks/       00_audit ... 06_cost_and_final_model, and DeepVoice_final.ipynb (all of them
+                 in one notebook); analysis only, real code lives in src/ (nbstripout enabled)
+docs/            PLAN.pdf, progress report, final report, executed final notebook
 results/         one CSV per experiment + small figures (committed); configs/ = one JSON per run
 CLAUDE.md        working rules for the team and for Claude Code
-model/           final model card; large weights go to a release / HF Hub, not git
-                 (a small final model such as an sklearn .joblib may be committed)
+model/           final model (29 KB classifier + metadata) and MODEL_CARD.md; XLS-R itself is
+                 downloaded from Hugging Face
 hypotheses.md    frozen + hashed before any eval run
 data/ cache/     GITIGNORED: raw audio, features, checkpoints
 ```

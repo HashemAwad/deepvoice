@@ -1,2 +1,0 @@
-model,device,clips,batch_audio_s,seconds,ms_per_clip,realtime_factor,est_asvspoof_hours,est_itw_hours,note
-xlsr300m,mps (M5),100,60,6.4,64,57,1.9,0.7,"100 random train clips, audio loading included, model load excluded; estimates = audio hours / 57"

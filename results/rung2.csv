@@ -1,8 +1,6 @@
 rung,model,config,seed,dataset,split,eer,ci_low,ci_high,train_time,latency
 2,logreg:xlsr300m_L00,rung2_logreg_xlsr300m_L00_s0,0,asvspoof,train,0,0,0,0.363918,0.0010303
 2,logreg:xlsr300m_L00,rung2_logreg_xlsr300m_L00_s0,0,asvspoof,dev,0.00392465,7.46229e-05,0.00726303,0.363918,0.00100963
-2,logreg:xlsr300m_L06,rung2_logreg_xlsr300m_L06_s0,0,asvspoof,train,0,0,0,0.232247,0.000830114
-2,logreg:xlsr300m_L06,rung2_logreg_xlsr300m_L06_s0,0,asvspoof,dev,8.97022e-05,0,0.000195618,0.232247,0.0010147
 2,logreg:xlsr300m_L09,rung2_logreg_xlsr300m_L09_s0,0,asvspoof,train,0,0,0,0.26385,0.000911715
 2,logreg:xlsr300m_L09,rung2_logreg_xlsr300m_L09_s0,0,asvspoof,dev,0.000392465,0,0.00125681,0.26385,0.000793253
 2,logreg:xlsr300m_L12,rung2_logreg_xlsr300m_L12_s0,0,asvspoof,train,0,0,0,0.200586,0.00085658
@@ -19,7 +17,10 @@ rung,model,config,seed,dataset,split,eer,ci_low,ci_high,train_time,latency
 2,mlp:xlsr300m_L03,rung2_mlp_xlsr300m_L03_s0,0,asvspoof,dev,0.000392465,0,0.000809389,1.44212,0.000862879
 2,mlp:xlsr300m_L06,rung2_mlp_xlsr300m_L06_s0,0,asvspoof,train,0,0,0,1.41929,0.000815669
 2,mlp:xlsr300m_L06,rung2_mlp_xlsr300m_L06_s0,0,asvspoof,dev,0.000392465,3.3459e-05,0.000845471,1.41929,0.000820845
-2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,train,0,0,0,0.324495,0.0012306
-2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,dev,4.48511e-05,0,0.000161812,0.324495,0.00120175
-2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,eval,0.0236574,0.0152953,0.0305579,0.324495,0.00142071
-2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,itw,itw,0.422511,0.336203,0.527949,0.324495,0.00109094
+2,logreg:xlsr300m_L06,rung2_logreg_xlsr300m_L06_s0,0,asvspoof,train,0,0,0,0.158907,0.000506138
+2,logreg:xlsr300m_L06,rung2_logreg_xlsr300m_L06_s0,0,asvspoof,dev,8.97022e-05,0,0.000195618,0.158907,0.000493712
+2,logreg:xlsr300m_L06,rung2_logreg_xlsr300m_L06_s0,0,asvspoof,eval,0.00336558,0.0020508,0.00499285,0.158907,0.000818362
+2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,train,0,0,0,0.162682,0.000501327
+2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,dev,4.48511e-05,0,0.000161812,0.162682,0.00086695
+2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,asvspoof,eval,0.0236574,0.0152953,0.0305579,0.162682,0.000834768
+2,logreg:xlsr300m_L03,rung2_logreg_xlsr300m_L03_s0,0,itw,itw,0.422511,0.336203,0.527949,0.162682,0.000804462
